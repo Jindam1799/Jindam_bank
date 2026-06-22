@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>진담은행 V6.2 - 개별 삭제 & 버그 패치</title>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  </head>
+  <body>
+    <body>
+    <!-- 🎬 인트로 화면 (이 부분을 body 바로 아래에 추가하세요) -->
+    <div id="intro-screen">
+        <div class="intro-content">
+            <h1>🏦 진심을 담은 진담은행에 오신 것을 환영합니다!</h1>
+            <p>당신의 중국어 자산을 불려줄 최고의 은행</p>
+            <span class="blink-text">화면을 터치하거나 아무 키나 눌러주세요</span>
+        </div>
+    </div>
+    <div class="app-container">
+      <div id="view-login" class="view login-screen active">
+        <h1>🪙 진담은행</h1>
+        <div class="login-box">
+          <input
+            type="text"
+            id="login-nick"
+            class="input-cute"
+            placeholder="이름 (닉네임)"
+            onkeydown="
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                login();
+              }
+            "
+          />
+          <button class="btn-cute" onclick="login()">은행 들어가기 🚀</button>
+
+          <div
+            style="
+              margin-top: 20px;
+              padding-top: 20px;
+              border-top: 1px dashed #dfe6e9;
+            "
+          >
+            <p
+              style="
+                font-size: 13px;
+                color: var(--text-muted);
+                margin-bottom: 10px;
+              "
+            >
+              아직 내 통장이 없다면?
+            </p>
+            <button
+              class="btn-cute"
+              style="
+                background: var(--yellow);
+                color: var(--text-dark);
+                box-shadow: 0 4px 0 #e1b154;
+              "
+              onclick="showSignup()"
+            >
+              새 통장 만들기 💳
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-signup" class="view login-screen">
+        <h2 style="color: var(--danger); margin-bottom: 15px">
+          나만의 통장 만들기
+        </h2>
+        <div class="login-box">
+          <p
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              color: var(--text-muted);
+              text-align: left;
+              margin-bottom: 5px;
+            "
+          >
+            1. 내 프로필 사진 고르기
+          </p>
+          <div class="avatar-grid" id="avatar-selection"></div>
+
+          <p
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              color: var(--text-muted);
+              text-align: left;
+              margin-bottom: 5px;
+              margin-top: 15px;
+            "
+          >
+            2. 내 이름 쓰기
+          </p>
+          <input
+            type="text"
+            id="signup-nick"
+            class="input-cute"
+            placeholder="사용할 이름 (닉네임)"
+            onkeydown="
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                createAccount();
+              }
+            "
+          />
+
+          <p
+            style="
+              font-size: 11px;
+              color: #aaa;
+              margin-top: 5px;
+              margin-bottom: 10px;
+            "
+          >
+            * 통장을 만들고 나면 선생님이 내 원래 돈을 입금해 주실 거예요!
+          </p>
+          <button class="btn-cute" onclick="createAccount()">
+            통장 개설 완료! 🎉
+          </button>
+          <button
+            class="btn-cute"
+            style="
+              background: transparent;
+              color: var(--text-muted);
+              box-shadow: none;
+              margin-top: 5px;
+            "
+            onclick="cancelSignup()"
+          >
+            뒤로 가기
+          </button>
+        </div>
+      </div>
+
+      <div id="view-student" class="view">
+        <header>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div
+              id="user-avatar"
+              style="
+                font-size: 30px;
+                background: #f4f7f6;
+                border-radius: 50%;
+                width: 45px;
+                height: 45px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              👶
+            </div>
+            <div>
+              <div class="profile-info">
+                <span id="user-display-name">학생</span>님의 지갑
+              </div>
+              <div
+                style="
+                  font-size: 11px;
+                  color: var(--text-muted);
+                  margin-top: 2px;
+                "
+              >
+                <span id="user-account-num" style="font-family: monospace"
+                  >진담-0000-0000</span
+                >
+                |
+                <strong style="color: var(--primary)" id="game-month-display"
+                  >1개월 차</strong
+                >
+              </div>
+            </div>
+          </div>
+          <button class="logout-btn" onclick="logout()">나가기</button>
+        </header>
+
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('tab-home')" id="nav-home">
+            💰 자산
+          </div>
+          <div class="tab" onclick="switchTab('tab-bank')" id="nav-bank">
+            🏦 은행
+          </div>
+          <div class="tab" onclick="switchTab('tab-stock')" id="nav-stock">
+            📈 주식장터
+          </div>
+        </div>
+
+        <div class="content">
+          <div id="tab-home" style="display: block">
+            <div
+              class="card"
+              style="
+                background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+                border: none;
+              "
+            >
+              <div class="card-title">💵 내가 가진 현금 (지갑)</div>
+              <div class="asset-big" id="my-cash" style="color: #d63031">
+                0 원
+              </div>
+            </div>
+
+            <div class="flex-row">
+              <div class="card" style="flex: 1">
+                <div
+                  class="card-title"
+                  style="font-size: 14px; color: var(--text-muted)"
+                >
+                  🏦 은행 적금
+                </div>
+                <div
+                  style="font-size: 20px; font-weight: bold; text-align: center"
+                  id="my-bank"
+                >
+                  0 원
+                </div>
+              </div>
+              <div class="card" style="flex: 1">
+                <div
+                  class="card-title"
+                  style="font-size: 14px; color: var(--text-muted)"
+                >
+                  📈 주식 투자금
+                </div>
+                <div
+                  style="font-size: 20px; font-weight: bold; text-align: center"
+                  id="my-stock-val"
+                >
+                  0 원
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">📝 내 돈 사용 기록</div>
+              <div
+                id="my-logs"
+                style="
+                  font-size: 12px;
+                  color: var(--text-muted);
+                  max-height: 150px;
+                  overflow-y: auto;
+                  line-height: 1.6;
+                "
+              ></div>
+            </div>
+          </div>
+
+          <div id="tab-bank" style="display: none">
+            <div class="card">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 15px;
+                  border-bottom: 1px solid #eee;
+                  padding-bottom: 10px;
+                "
+              >
+                <span style="font-weight: bold">내 지갑의 현금:</span>
+                <span
+                  style="
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: var(--danger);
+                  "
+                  id="bank-my-cash"
+                  >0 원</span
+                >
+              </div>
+
+              <div class="card-title">🏦 6개월 누적형 정기 적금</div>
+              <p
+                style="
+                  font-size: 12px;
+                  color: var(--text-muted);
+                  margin-bottom: 15px;
+                  line-height: 1.4;
+                "
+              >
+                원할 때마다 언제든 이 통장에 <strong>추가로 저금</strong>할 수
+                있어요!<br />
+                선생님이 달력을 넘길 때마다 <strong>원금의 1% 이자</strong>가
+                자산에 쌓이고, 6개월 만기가 되면 모두 돌려받습니다.
+              </p>
+              <div class="flex-row">
+                <input
+                  type="number"
+                  id="bank-input-amount"
+                  class="input-cute"
+                  style="margin-bottom: 0"
+                  placeholder="저축할 금액"
+                />
+                <button
+                  class="btn-cute"
+                  style="
+                    width: 100px;
+                    background: var(--success);
+                    box-shadow: 0 4px 0 #008f72;
+                  "
+                  onclick="makeDeposit()"
+                >
+                  저금하기
+                </button>
+              </div>
+            </div>
+
+            <div class="card" style="padding: 15px">
+              <div id="deposit-list-container"></div>
+            </div>
+          </div>
+
+          <div id="tab-stock" style="display: none">
+            <div
+              class="card"
+              style="background: #f4f7f6; border-color: #dfe6e9"
+            >
+              <div class="card-title" style="color: var(--blue)">
+                💼 내 주식 포트폴리오
+              </div>
+              <div id="portfolio-container" style="font-size: 13px"></div>
+            </div>
+
+            <div class="card" style="padding: 10px 15px">
+              <div class="card-title" style="margin-bottom: 5px">
+                🌍 세계 유명 기업 장터
+              </div>
+              <p style="font-size: 11px; color: var(--text-muted)">
+                ⚠️ 내 전체 자산의 <strong>50%</strong>까지만 투자할 수 있어요!
+              </p>
+            </div>
+            <div class="card" style="padding: 0; overflow: hidden">
+              <div id="stock-list-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-admin" class="view">
+        <header style="background: #0984e3">
+          <div class="profile-info" style="color: white">
+            👩‍🏫 진담 선생님 패널
+          </div>
+          <button class="logout-btn" onclick="logout()">나가기</button>
+        </header>
+        <div class="content" style="padding-top: 20px">
+          <div
+            class="card"
+            style="background: #fff0f0; border-color: var(--danger)"
+          >
+            <div class="card-title" style="color: var(--danger)">
+              ⏰ 게임 달력 관리 (현재:
+              <span id="admin-month-display">1</span>개월 차)
+            </div>
+            <p
+              style="
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-bottom: 10px;
+              "
+            >
+              달력을 넘기면 유지된 적금들에 <strong>1% 이자</strong>가 일괄
+              지급됩니다.
+            </p>
+            <button
+              class="btn-cute"
+              style="background: var(--danger); box-shadow: 0 4px 0 #b32526"
+              onclick="advanceGameMonth()"
+            >
+              📅 한 달 달력 넘기기 (이자 발생!)
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">💰 학생 자산 / 보상 관리</div>
+            <div
+              style="
+                margin-bottom: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+              "
+            >
+              <select
+                id="admin-reward-type"
+                class="input-cute"
+                style="padding: 10px; margin: 0"
+                onchange="toggleCustomReward()"
+              >
+                <option value="1">📝 숙제 완료 (+1원)</option>
+                <option value="2">🔥 게임 승리 (+2원)</option>
+                <option value="1">⚡ 퀴즈 정답 (+1원)</option>
+                <option value="custom">
+                  ✏️ 직접 입력 (기존 돈 입력/특별 보상)
+                </option>
+              </select>
+              <input
+                type="number"
+                id="admin-custom-amount"
+                class="input-cute"
+                style="display: none; margin: 0; border-color: var(--blue)"
+                placeholder="금액(원)을 입력하세요"
+              />
+            </div>
+            <div class="admin-student-list" id="admin-students"></div>
+          </div>
+
+          <div style="text-align: center; margin-top: 30px">
+            <button
+              style="
+                background: transparent;
+                border: none;
+                color: #b2bec3;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 12px;
+              "
+              onclick="reqResetSystem()"
+            >
+              모든 계좌 및 데이터 초기화 (위험)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="stock-modal">
+      <div class="modal-content">
+        <h2 id="modal-stock-name" style="margin-bottom: 5px">회사명</h2>
+        <div
+          style="
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--blue);
+          "
+          id="modal-stock-price"
+        >
+          0 원
+        </div>
+
+        <div
+          style="
+            background: #f4f7f6;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #dfe6e9;
+          "
+        >
+          <canvas
+            id="stock-canvas"
+            width="300"
+            height="150"
+            style="width: 100%; height: 150px"
+          ></canvas>
+        </div>
+
+        <div
+          style="
+            background: #f1f2f6;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: left;
+          "
+        >
+          내가 가진 주식:
+          <strong id="modal-my-shares" style="color: var(--primary)">0</strong>
+          개<br />
+          나의 평단가: <span id="modal-my-avg">0</span> 원
+        </div>
+
+        <input
+          type="number"
+          id="modal-qty-input"
+          class="input-cute"
+          placeholder="몇 개(주)를 거래할까요?"
+          min="1"
+        />
+
+        <div class="flex-row">
+          <button
+            class="btn-cute"
+            style="background: var(--danger); box-shadow: 0 4px 0 #b32526"
+            onclick="executeStockTrade('buy')"
+          >
+            🔴 사기 (Buy)
+          </button>
+          <button
+            class="btn-cute"
+            style="background: var(--blue); box-shadow: 0 4px 0 #076bb8"
+            onclick="executeStockTrade('sell')"
+          >
+            🔵 팔기 (Sell)
+          </button>
+        </div>
+        <button
+          style="
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: bold;
+            cursor: pointer;
+          "
+          onclick="closeStockModal()"
+        >
+          닫기 ✖
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="custom-alert" style="z-index: 9999">
+      <div class="modal-content" style="max-width: 320px">
+        <div style="font-size: 40px; margin-bottom: 10px" id="alert-icon">
+          🔔
+        </div>
+        <h3 id="alert-title" style="margin-bottom: 10px">알림</h3>
+        <p
+          id="alert-msg"
+          style="
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.4;
+          "
+        ></p>
+        <button class="btn-cute" onclick="closeAlert()">확인</button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="custom-confirm" style="z-index: 9999">
+      <div class="modal-content" style="max-width: 320px">
+        <div style="font-size: 40px; margin-bottom: 10px">⚠️</div>
+        <h3 id="confirm-title" style="margin-bottom: 10px">확인해주세요</h3>
+        <p
+          id="confirm-msg"
+          style="
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.4;
+          "
+        ></p>
+        <div class="flex-row">
+          <button
+            class="btn-cute"
+            style="background: var(--danger); box-shadow: 0 4px 0 #b32526"
+            id="confirm-yes"
+          >
+            네
+          </button>
+          <button
+            class="btn-cute"
+            style="
+              background: #dfe6e9;
+              color: var(--text-muted);
+              box-shadow: 0 4px 0 #b2bec3;
+            "
+            onclick="closeConfirm()"
+          >
+            아니오
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 꼭 이 순서대로 작성되어야 합니다! -->
+    <script src="data.js"></script>
+    <script src="scripts.js"></script>
+  </body>
+</html>
