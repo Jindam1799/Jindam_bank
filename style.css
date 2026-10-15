@@ -2394,3 +2394,386 @@ button.me-avatar::after {
 .amount-input.mini .unit {
   right: 10px;
 }
+
+/* =========================================================
+   그림 아이콘 · 은행 창구 장면 · 칭호
+   ========================================================= */
+.gi {
+  width: 1.35em;
+  height: 1.35em;
+  vertical-align: -0.32em;
+  flex: none;
+  display: inline-block;
+  overflow: visible;
+}
+.card-title .gi,
+.sheet-title .gi {
+  width: 28px;
+  height: 28px;
+}
+.btn .gi {
+  width: 24px;
+  height: 24px;
+}
+.row-ic {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.qi {
+  width: 34px;
+  height: 34px;
+}
+.quick-btn {
+  gap: 6px;
+}
+.lg-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: 0;
+}
+.up-bg {
+  background: var(--up);
+}
+.down-bg {
+  background: var(--down);
+}
+.region-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+.st-emoji .gi,
+.sm-emoji .gi {
+  width: 34px;
+  height: 34px;
+}
+.sm-emoji .gi {
+  width: 40px;
+  height: 40px;
+}
+.pf-title .gi {
+  width: 22px;
+  height: 22px;
+  vertical-align: -6px;
+}
+.shop-emoji .gi {
+  width: 48px;
+  height: 48px;
+}
+.bag-emoji .gi,
+.admin-shop-item .em .gi {
+  width: 32px;
+  height: 32px;
+}
+.confirm-item .gi {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 4px;
+}
+.piggy-step .gi {
+  width: 28px;
+  height: 28px;
+}
+.emoji-pick button {
+  display: grid;
+  place-items: center;
+}
+.emoji-pick .gi {
+  width: 28px;
+  height: 28px;
+}
+.log-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.log-item .gi {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+.hero-coin {
+  width: 62px;
+  height: 62px;
+  animation: bounce 2.6s ease-in-out infinite;
+}
+.next-title {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 12px;
+  padding: 7px 10px;
+}
+.next-title b {
+  color: var(--pink-dark);
+}
+.title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-round);
+  font-size: 13px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 2px 10px 2px 4px;
+  white-space: nowrap;
+}
+.title-badge .gi {
+  width: 20px;
+  height: 20px;
+}
+
+/* 은행 창구 장면 */
+.scene-card {
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff8fb 0%, #eef6ff 100%);
+  border-color: #ffd3e1;
+  position: relative;
+}
+.scene-awning {
+  height: 26px;
+  background: repeating-linear-gradient(90deg, var(--pink) 0 30px, #fff 30px 60px);
+  position: relative;
+}
+.scene-awning::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 10px;
+  background: radial-gradient(circle at 15px 0, var(--pink) 14px, transparent 15px) 0 0 / 60px 10px repeat-x,
+    radial-gradient(circle at 45px 0, #fff 14px, transparent 15px) 0 0 / 60px 10px repeat-x;
+}
+.scene {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'me clerk' 'talk talk';
+  align-items: end;
+  gap: 6px 10px;
+  padding: 18px 16px 0;
+}
+.scene-me {
+  grid-area: me;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.scene-char {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 60%, #fff 0 60%, transparent 61%);
+  padding: 2px;
+  cursor: pointer;
+  animation: idle 3s ease-in-out infinite;
+}
+@keyframes idle {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-2deg);
+  }
+}
+.jump {
+  animation: jump 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) !important;
+}
+@keyframes jump {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-22px) scale(1.06, 0.95);
+  }
+  60% {
+    transform: translateY(0) scale(1.08, 0.9);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+.me-say {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translate(-50%, -6px) scale(0.8);
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-round);
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: 0.2s;
+  pointer-events: none;
+  z-index: 2;
+}
+.me-say.show {
+  opacity: 1;
+  transform: translate(-50%, -14px) scale(1);
+}
+.name-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-family: var(--font-round);
+  font-size: 17px;
+}
+.scene-clerk {
+  grid-area: clerk;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.scene-clerk .clerk-panda {
+  width: 96px;
+  height: 112px;
+}
+.scene-clerk .clerk-name {
+  margin-top: 2px;
+}
+.scene-talk {
+  grid-area: talk;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+.scene-bubble {
+  width: 100%;
+  text-align: center;
+}
+.scene-bubble::after {
+  left: auto;
+  right: 26%;
+  top: -9px;
+  transform: rotate(135deg);
+}
+.scene-desk {
+  height: 34px;
+  background: linear-gradient(180deg, #f6c8a0, #e9a97c);
+  border-top: 3px solid var(--ink);
+  display: grid;
+  place-items: center;
+}
+.scene-desk span {
+  font-family: var(--font-round);
+  font-size: 13px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  padding: 0 10px;
+}
+
+/* 데스크톱 왼쪽 메뉴의 내 캐릭터 */
+.nav-me {
+  display: none;
+}
+
+/* 백업 */
+.backup-card {
+  margin-top: 14px;
+}
+.backup-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .scene-card {
+    grid-column: 1 / -1;
+  }
+  .scene {
+    grid-template-columns: 150px 1fr 150px;
+    grid-template-areas: 'me talk clerk';
+    padding: 20px 24px 0;
+  }
+  .scene-char {
+    width: 128px;
+    height: 128px;
+  }
+  .scene-clerk .clerk-panda {
+    width: 118px;
+    height: 138px;
+  }
+  .scene-talk {
+    align-self: center;
+    padding-bottom: 0;
+  }
+  .scene-bubble {
+    font-size: 15px;
+    padding: 14px 18px;
+  }
+  .scene-bubble::after {
+    left: auto;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%) rotate(225deg);
+  }
+  .hero-card {
+    grid-column: auto;
+  }
+}
+@media (min-width: 1024px) {
+  .nav-brand {
+    flex-direction: row;
+    text-align: left;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+  .nav-panda {
+    width: 48px;
+    height: 56px;
+  }
+  .nav-brand-title {
+    font-size: 20px;
+  }
+  .nav-me {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px;
+    margin-bottom: 8px;
+    border-radius: 20px;
+    background: linear-gradient(160deg, #ffe3ec, #fff4cf);
+  }
+  .nav-me-char {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--ink);
+    padding: 6px;
+    box-shadow: 0 4px 0 var(--ink);
+    animation: idle 3s ease-in-out infinite;
+  }
+  .nav-me-name {
+    font-family: var(--font-round);
+    font-size: 20px;
+  }
+  .grid-home {
+    grid-template-columns: 1.2fr 1fr;
+  }
+  .log-card {
+    grid-row: auto;
+  }
+}
