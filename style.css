@@ -2274,3 +2274,123 @@ body.in-app .sound-fab {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* ---------- 프로필 캐릭터 ---------- */
+.av {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.av-emoji {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1;
+}
+button.me-avatar {
+  cursor: pointer;
+  padding: 4px;
+  position: relative;
+}
+button.me-avatar::after {
+  content: '✎';
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--pink);
+  color: #fff;
+  font-size: 11px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+}
+.avatar-item {
+  display: flex;
+  align-items: center;
+  aspect-ratio: auto;
+  padding: 6px;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--ink-2);
+  font-weight: 700;
+}
+.avatar-item .av {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+.avatar-grid.big {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.avatar-grid.big .avatar-item {
+  aspect-ratio: auto;
+  padding: 8px 6px;
+  display: flex;
+  align-items: center;
+}
+.avatar-item.current {
+  outline: 2px dashed var(--mint);
+  outline-offset: 2px;
+}
+.profile-shop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  background: linear-gradient(140deg, #eef4ff, #f4eeff);
+  border-color: #e2e2ff;
+}
+.profile-now {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: #fff;
+  border: 2px solid var(--line);
+  padding: 4px;
+  font-size: 34px;
+  flex: none;
+}
+.profile-shop-text {
+  flex: 1;
+  min-width: 0;
+}
+.admin-student .av-box {
+  width: 44px;
+  height: 44px;
+  font-size: 28px;
+  flex: none;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--lav-soft);
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.setting-row small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.amount-input.mini {
+  width: 100px;
+  flex: none;
+}
+.amount-input.mini .input {
+  padding: 8px 30px 8px 10px;
+  font-size: 16px;
+}
+.amount-input.mini .unit {
+  right: 10px;
+}

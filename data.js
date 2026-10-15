@@ -231,5 +231,24 @@ const PANDA_TIPS = [
   '<b>평단가</b>는 내가 주식 1개를 평균 얼마에 샀는지 알려 주는 숫자예요.',
   '돈을 모으는 비결: <b>조금씩, 꾸준히!</b>',
   '이번 달에 산 주식은 <b>다음 달</b>부터 팔 수 있어요. 투자는 기다림이 중요해요!',
+  '주식은 오르락내리락하지만, <b>오래 기다리면</b> 조금씩 오르는 경우가 많아요.',
   '숙제를 하면 돈이 생겨요. 공부도 하고 돈도 모으고, 일석이조!',
 ];
+
+// 6. 프로필 캐릭터 (진담은행 오리지널 그림, index.html의 av-○○ 그림과 짝)
+const CHARACTERS = [
+  { id: 'dog', name: '멍멍이' },
+  { id: 'cat', name: '야옹이' },
+  { id: 'rabbit', name: '깡총이' },
+  { id: 'bear', name: '곰돌이' },
+  { id: 'panda', name: '아기 판다' },
+  { id: 'tiger', name: '어흥이' },
+  { id: 'lion', name: '사자왕' },
+  { id: 'frog', name: '개굴이' },
+  { id: 'koala', name: '코알라' },
+  { id: 'hamster', name: '햄찌' },
+  { id: 'fox', name: '여우' },
+  { id: 'penguin', name: '펭펭이' },
+];
+// 프로필 바꾸기 기본 가격 (첫 1회는 무료, 선생님 창구에서 바꿀 수 있음)
+const DEFAULT_AVATAR_PRICE = 10;

@@ -8,7 +8,6 @@
 const STORAGE_KEY = 'jindam_bank_v6';
 const SOUND_KEY = 'jindam_bank_sound';
 const TEACHER_CODE = '老师';
-const AVATARS = ['🐶', '🐱', '🐰', '🐻', '🐼', '🐯', '🦁', '🐸', '🐨', '🐹', '🦊', '🐧'];
 const SHOP_EMOJIS = ['🍬', '🍭', '🍫', '⭐', '✏️', '📒', '💺', '🎵', '📚', '🎲', '👑', '🎁', '🧸', '🎟️', '🏅', '🍪'];
 const BGM_LIST = ['bgm1.mp3', 'bgm2.mp3'];
 const HISTORY_LEN = 40;
@@ -25,6 +24,10 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const pandaSvg = (mood = '', cls = '') =>
   `<svg class="panda ${cls}" viewBox="0 0 120 140"><use href="#panda-clerk${mood ? '-' + mood : ''}"/></svg>`;
+// 프로필: 새 캐릭터 id면 그림, 예전 이모지면 이모지 그대로
+const isChar = (a) => CHARACTERS.some((c) => c.id === a);
+const avatarHtml = (a) =>
+  isChar(a) ? `<svg class="av" viewBox="0 0 100 100"><use href="#av-${a}"/></svg>` : `<span class="av-emoji">${esc(a || '🐶')}</span>`;
 const stockInfo = (sym) => GLOBAL_STOCKS.find((s) => s.symbol === sym);
 const stockLabel = (s) => `${s.emoji} ${s.name}`;
 const regionText = (s) => {
@@ -117,6 +120,8 @@ const state = {
   stockSort: 'default',
   tipIdx: 0,
   editingItem: null,
+  pickAvatar: null,
+  settings: { avatarPrice: DEFAULT_AVATAR_PRICE },
 };
 
 function freshPrice() {
@@ -137,7 +142,8 @@ function normalizeStudent(s) {
   if (!Array.isArray(s.logs)) s.logs = [];
   if (!Array.isArray(s.items)) s.items = [];
   if (typeof s.seenNews !== 'number') s.seenNews = 0;
-  if (!s.avatar) s.avatar = '🐶';
+  if (!s.avatar) s.avatar = 'dog';
+  if (typeof s.avatarChanges !== 'number') s.avatarChanges = 0;
   return s;
 }
 
@@ -162,13 +168,13 @@ function load() {
           open: p.open || base,
           origin: p.origin || base,
           trend: p.trend || 0,
-          trend: p.trend || 0,
           history: Array.isArray(p.history) && p.history.length ? p.history.slice(-HISTORY_LEN) : Array(15).fill(p.price),
         };
       }
     }
     if (saved.students) state.students = saved.students;
     if (Array.isArray(saved.news)) state.news = saved.news;
+    if (saved.settings) Object.assign(state.settings, saved.settings);
     if (Array.isArray(saved.shop)) state.shop = saved.shop;
     else state.shop = JSON.parse(JSON.stringify(DEFAULT_SHOP));
   } else {
@@ -188,6 +194,7 @@ function save() {
         stockPrices: state.stockPrices,
         news: state.news,
         shop: state.shop,
+        settings: state.settings,
       }),
     );
   } catch (e) {
@@ -266,11 +273,12 @@ function showView(id) {
 
 function renderAvatarSelection() {
   const c = $('#avatar-selection');
-  c.innerHTML = AVATARS.map(
-    (a) => `<button type="button" class="avatar-item ${a === selectedAvatar ? 'selected' : ''}" data-avatar="${a}">${a}</button>`,
+  c.innerHTML = CHARACTERS.map(
+    (ch) =>
+      `<button type="button" class="avatar-item ${ch.id === selectedAvatar ? 'selected' : ''}" data-avatar="${ch.id}">${avatarHtml(ch.id)}<span>${ch.name}</span></button>`,
   ).join('');
 }
-let selectedAvatar = AVATARS[0];
+let selectedAvatar = CHARACTERS[0].id;
 
 function createAccount() {
   const nick = $('#signup-nick').value.trim();
@@ -337,7 +345,7 @@ function renderStudentAll() {
   const s = me();
   if (!s) return;
   $('#user-display-name').textContent = state.currentUser;
-  $('#user-avatar').textContent = s.avatar;
+  $('#user-avatar').innerHTML = avatarHtml(s.avatar);
   $('#user-account-num').textContent = s.accountNum;
   $('#game-month-display').textContent = `${state.gameMonth}개월 차`;
   renderNewsBar();
@@ -898,6 +906,7 @@ function startMarketSimulation() {
 // ---------- 상점 ----------
 function renderShop() {
   const s = me();
+  renderProfileShop();
   $('#shop-my-cash').textContent = won(s.cash);
   const grid = $('#shop-list');
   if (!state.shop.length) {
@@ -976,6 +985,52 @@ function useItem(id) {
   );
 }
 
+// ---------- 프로필 캐릭터 바꾸기 (첫 1회 무료) ----------
+const avatarCost = (s) => (s.avatarChanges > 0 ? state.settings.avatarPrice : 0);
+function renderProfileShop() {
+  const s = me();
+  $('#shop-avatar-now').innerHTML = avatarHtml(s.avatar);
+  const cost = avatarCost(s);
+  $('#shop-avatar-price').innerHTML = cost
+    ? `새 캐릭터로 바꾸는 데 <b>${won(cost)}</b>이 들어요.`
+    : `<b>첫 1회는 무료!</b> 진담은행 새 캐릭터로 바꿔 보세요.`;
+}
+function openAvatarModal() {
+  const s = me();
+  if (!s) return;
+  state.pickAvatar = isChar(s.avatar) ? s.avatar : null;
+  const cost = avatarCost(s);
+  $('#avatar-modal-price').innerHTML = cost
+    ? `바꾸는 데 <b>${won(cost)}</b>이 들어요. (내 지갑: ${won(s.cash)})`
+    : `<b>첫 1회는 무료</b>예요! 그 다음부터는 ${won(state.settings.avatarPrice)}이 들어요.`;
+  renderAvatarChangeGrid();
+  openModal('avatar-modal');
+}
+function renderAvatarChangeGrid() {
+  const s = me();
+  $('#avatar-change-grid').innerHTML = CHARACTERS.map(
+    (ch) =>
+      `<button type="button" class="avatar-item ${ch.id === state.pickAvatar ? 'selected' : ''} ${ch.id === s.avatar ? 'current' : ''}" data-pick-avatar="${ch.id}">${avatarHtml(ch.id)}<span>${ch.name}${ch.id === s.avatar ? ' (지금)' : ''}</span></button>`,
+  ).join('');
+  $('#btn-avatar-confirm').disabled = !state.pickAvatar || state.pickAvatar === s.avatar;
+}
+function confirmAvatarChange() {
+  const s = me();
+  const id = state.pickAvatar;
+  if (!id || id === s.avatar) return;
+  const cost = avatarCost(s);
+  if (s.cash < cost) return customAlert(`지갑에 돈이 부족해요!<br>필요한 돈: <b>${won(cost)}</b><br>내 지갑: ${won(s.cash)}`, '잔액 부족', 'sad');
+  const name = CHARACTERS.find((c) => c.id === id).name;
+  s.cash -= cost;
+  s.avatar = id;
+  s.avatarChanges += 1;
+  addLog(s, `🎨 프로필을 ${name}(으)로 바꿨어요${cost ? ` (-${cost}원)` : ' (무료)'}`);
+  save();
+  closeModal('avatar-modal');
+  renderStudentAll();
+  toast(`${name}(으)로 바꿨어요!`);
+}
+
 // =========================================================
 // 👩‍🏫 선생님 창구
 // =========================================================
@@ -1004,7 +1059,7 @@ function renderAdmin() {
           const pending = s.items.filter((i) => !i.used).length;
           return `
         <div class="admin-student">
-          <div class="av">${esc(s.avatar)}</div>
+          <div class="av-box">${avatarHtml(s.avatar)}</div>
           <div class="info">
             <div class="nm">${esc(nick)}</div>
             <div class="sub mono">${esc(s.accountNum)}</div>
@@ -1021,6 +1076,7 @@ function renderAdmin() {
     : `<div class="empty">${pandaSvg('')}아직 가입한 학생이 없어요.</div>`;
 
   // 상점 관리
+  $('#admin-avatar-price').value = state.settings.avatarPrice;
   $('#admin-shop').innerHTML = state.shop.length
     ? state.shop
         .map(
@@ -1210,9 +1266,9 @@ function advanceGameMonth() {
         }
       });
 
-      // 호재 40% · 악재 40% · 관망 20% → 평균적으로 공짜 돈이 생기지 않게
+      // 호재 45% · 악재 35% · 관망 20% → 길게 보면 한 달에 평균 +1~2% 정도 오름 (적금 1%와 비슷하게)
       const roll = Math.random();
-      const gType = roll < 0.4 ? 'good' : roll < 0.8 ? 'bad' : 'neutral';
+      const gType = roll < 0.45 ? 'good' : roll < 0.8 ? 'bad' : 'neutral';
       const gPool = MARKET_EVENTS.filter((e) => e.type === gType);
       const g = gPool[Math.floor(Math.random() * gPool.length)];
       const c = COMPANY_EVENTS[Math.floor(Math.random() * COMPANY_EVENTS.length)];
@@ -1228,7 +1284,7 @@ function advanceGameMonth() {
       GLOBAL_STOCKS.forEach((st) => {
         const p = state.stockPrices[st.symbol];
         const isTarget = st.symbol === target.symbol;
-        let f = gSign ? gSign * ((Math.random() * 3 + 2) / 100) : (Math.random() * 4 - 2) / 100;
+        let f = gSign ? gSign * ((Math.random() * 3 + 2) / 100) : (Math.random() * 4 - 1) / 100; // 관망: -1~+3%
         if (isTarget) f += cSign * ((Math.random() * 5 + 10) / 100);
         let np = Math.round(p.price * (1 + f));
         if (np === p.price && Math.abs(f) >= 0.02) np += f > 0 ? 1 : -1; // 싼 주식도 효과가 보이게
@@ -1383,6 +1439,11 @@ function bindEvents() {
     if ((el = t.closest('[data-action="open-news"]'))) return openNews();
     if ((el = t.closest('[data-action="break-savings"]'))) return breakSavings();
     if ((el = t.closest('[data-goto]'))) return switchTab(el.dataset.goto);
+    if ((el = t.closest('[data-action="change-avatar"]'))) return openAvatarModal();
+    if ((el = t.closest('[data-pick-avatar]'))) {
+      state.pickAvatar = el.dataset.pickAvatar;
+      return renderAvatarChangeGrid();
+    }
     if ((el = t.closest('[data-filter]'))) {
       state.stockFilter = el.dataset.filter;
       renderStockFilters();
@@ -1407,7 +1468,7 @@ function bindEvents() {
   });
 
   // 모달 바깥 누르면 닫기 (알림/확인 제외)
-  ['stock-modal', 'news-modal', 'item-modal'].forEach((id) =>
+  ['stock-modal', 'news-modal', 'item-modal', 'avatar-modal'].forEach((id) =>
     $('#' + id).addEventListener('click', (e) => {
       if (e.target.id === id) closeModal(id);
     }),
@@ -1422,7 +1483,7 @@ function bindEvents() {
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    for (const id of ['custom-confirm', 'custom-alert', 'item-modal', 'news-modal', 'stock-modal'])
+    for (const id of ['custom-confirm', 'custom-alert', 'avatar-modal', 'item-modal', 'news-modal', 'stock-modal'])
       if ($('#' + id).classList.contains('open')) return closeModal(id);
     $('#sound-pop').classList.remove('open');
   });
@@ -1456,6 +1517,14 @@ function bindEvents() {
   $('#btn-add-item').addEventListener('click', () => openItemModal(null));
   $('#btn-save-item').addEventListener('click', saveItem);
   $('#item-emoji').addEventListener('input', renderEmojiPick);
+  $('#admin-avatar-price').addEventListener('change', (e) => {
+    const v = parseInt(e.target.value, 10);
+    state.settings.avatarPrice = isNaN(v) || v < 0 ? DEFAULT_AVATAR_PRICE : v;
+    e.target.value = state.settings.avatarPrice;
+    save();
+    toast(`프로필 바꾸기 가격: ${state.settings.avatarPrice}원`);
+  });
+  $('#btn-avatar-confirm').addEventListener('click', confirmAvatarChange);
 
   // 다른 탭에서 데이터가 바뀌면 반영
   window.addEventListener('storage', (e) => {
