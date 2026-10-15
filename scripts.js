@@ -1630,6 +1630,19 @@ function bindEvents() {
     if ((el = t.closest('[data-del-item]'))) return deleteItem(el.dataset.delItem);
     if ((el = t.closest('[data-done-id]'))) return markItemUsed(el.dataset.doneNick, el.dataset.doneId);
     if ((el = t.closest('[data-close]'))) return closeModal(el.dataset.close);
+    if ((el = t.closest('.seg [data-sub]'))) {
+      const page = el.closest('.tab-page');
+      const subs = $$('[data-sub]', el.parentElement).map((b) => b.dataset.sub);
+      subs.forEach((k) => page.classList.toggle('sub-' + k, k === el.dataset.sub));
+      $$('[data-sub]', el.parentElement).forEach((b) => b.classList.toggle('active', b === el));
+      return;
+    }
+    if ((el = t.closest('.admin-seg [data-asec]'))) {
+      $('#view-admin').dataset.show = el.dataset.asec;
+      $$('.admin-seg [data-asec]').forEach((b) => b.classList.toggle('active', b === el));
+      $('#view-admin .admin-main').scrollTop = 0;
+      return;
+    }
     if ((el = t.closest('[data-restore]'))) return restoreFromRaw(localStorage.getItem(el.dataset.restore), el.dataset.restore.replace(BACKUP_PREFIX, ''));
     if ((el = t.closest('[data-icon-pick]'))) {
       state.editIcon = el.dataset.iconPick;
@@ -1716,6 +1729,17 @@ function bindEvents() {
     if ($('#view-admin').classList.contains('active')) renderAdmin();
   });
 }
+
+// 휴대폰에서 두 손가락 확대·두 번 탭 확대 막기
+['gesturestart', 'gesturechange', 'gestureend'].forEach((ev) => document.addEventListener(ev, (e) => e.preventDefault(), { passive: false }));
+document.addEventListener(
+  'touchmove',
+  (e) => {
+    if (e.touches && e.touches.length > 1) e.preventDefault();
+  },
+  { passive: false },
+);
+// 두 번 탭 확대는 CSS touch-action: manipulation 으로 막음 (빠른 연속 탭은 그대로 동작)
 
 // =========================================================
 load();

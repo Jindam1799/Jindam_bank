@@ -2777,3 +2777,608 @@ button.me-avatar::after {
     grid-row: auto;
   }
 }
+
+/* =========================================================
+   확대 막기 + 휴대폰 한 화면 레이아웃
+   ========================================================= */
+html {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  overscroll-behavior: none;
+}
+.seg {
+  display: none;
+}
+.move-guide {
+  margin-top: 12px;
+  background: var(--bg-2);
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.move-guide summary {
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--ink);
+}
+.move-guide ol {
+  margin: 8px 0 6px 18px;
+  line-height: 1.7;
+}
+.move-guide p {
+  font-size: 12.5px;
+  color: var(--pink-dark);
+}
+
+@media (max-width: 719px) {
+  .seg {
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    padding: 4px;
+    flex: none;
+  }
+  .seg button {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: 12px;
+    font-family: var(--font-round);
+    font-size: 14px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .seg button .gi {
+    width: 20px;
+    height: 20px;
+  }
+  .seg button.active {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  /* 화면 틀 */
+  .topbar {
+    padding: calc(8px + var(--safe-t)) 12px 6px;
+  }
+  .me-avatar {
+    width: 42px;
+    height: 42px;
+  }
+  .me-name {
+    font-size: 16px;
+  }
+  .me-sub {
+    font-size: 11px;
+  }
+  .month-chip {
+    font-size: 12.5px;
+    padding: 4px 9px;
+  }
+  .topbar .icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .news-bar {
+    margin: 0 12px 6px;
+    padding: 6px 8px 6px 6px;
+    gap: 8px;
+    border-radius: 14px;
+  }
+  .news-tag {
+    min-width: 46px;
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+  .news-line {
+    font-size: 12px;
+    -webkit-line-clamp: 1;
+  }
+  .news-more {
+    display: none;
+  }
+  .nav {
+    padding: 4px 6px calc(4px + var(--safe-b));
+  }
+  .nav-btn {
+    padding: 4px;
+    font-size: 12px;
+  }
+  .nav-btn .ic {
+    width: 24px;
+    height: 24px;
+  }
+  .view-shell .main {
+    padding: 2px 12px 8px;
+  }
+  .card {
+    padding: 12px 14px;
+    border-radius: 18px;
+  }
+  .card-title {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .card-title .gi {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* 탭 화면은 남은 높이를 꽉 채우고, 긴 목록만 안에서 넘겨 봄 */
+  .tab-page.active {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+  }
+  .tab-page > * + * {
+    margin-top: 0;
+  }
+
+  /* 홈 */
+  .grid-home {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+  }
+  .quick-card {
+    display: none;
+  }
+  .scene {
+    padding: 10px 12px 0;
+    gap: 2px 8px;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'me talk clerk';
+    align-items: end;
+  }
+  .scene-awning {
+    height: 18px;
+  }
+  .scene-awning::after {
+    height: 8px;
+    bottom: -8px;
+  }
+  .scene-char {
+    width: 74px;
+    height: 74px;
+  }
+  .name-tag {
+    font-size: 14px;
+    gap: 2px;
+  }
+  .title-badge {
+    font-size: 11.5px;
+    padding: 1px 8px 1px 3px;
+  }
+  .title-badge .gi {
+    width: 16px;
+    height: 16px;
+  }
+  .scene-clerk .clerk-panda {
+    width: 66px;
+    height: 78px;
+  }
+  .scene-clerk .clerk-name {
+    font-size: 11px;
+  }
+  .scene-talk {
+    align-self: center;
+    padding-bottom: 8px;
+    gap: 6px;
+  }
+  .scene-bubble {
+    font-size: 12.5px;
+    padding: 8px 10px;
+    line-height: 1.45;
+  }
+  .scene-bubble::after {
+    display: none;
+  }
+  .scene-talk .chip {
+    padding: 4px 9px;
+    font-size: 11.5px;
+  }
+  .scene-desk {
+    height: 24px;
+  }
+  .scene-desk span {
+    font-size: 11px;
+  }
+  .me-say {
+    font-size: 11.5px;
+  }
+  .hero-card {
+    padding: 12px 14px;
+  }
+  .hero-total {
+    font-size: 32px;
+  }
+  .hero-coin {
+    width: 44px;
+    height: 44px;
+  }
+  .asset-bar {
+    height: 12px;
+    margin: 8px 0;
+  }
+  .legend-item {
+    padding: 6px 8px;
+  }
+  .legend-item b {
+    font-size: 16px;
+  }
+  .next-title {
+    margin-top: 8px;
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  .log-card {
+    flex: 1;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+  }
+  .log-list {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+    font-size: 13px;
+  }
+  .log-item {
+    padding: 6px 2px;
+  }
+
+  /* 적금 */
+  #tab-bank .grid-two {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #tab-bank .desc {
+    display: none;
+  }
+  .wallet-line {
+    padding: 7px 12px;
+    margin-bottom: 8px;
+  }
+  .amount-input .input {
+    padding: 10px 40px 10px 14px;
+  }
+  #tab-bank .chip-row {
+    margin: 8px 0 10px;
+  }
+  #tab-bank .btn {
+    padding: 11px;
+    font-size: 16px;
+  }
+  .saving-box {
+    gap: 8px;
+  }
+  .piggy-step {
+    aspect-ratio: auto;
+    height: 40px;
+    border-radius: 12px;
+  }
+  .piggy-step small {
+    bottom: -16px;
+    font-size: 10px;
+  }
+  .stat-rows {
+    margin-top: 14px;
+    font-size: 13px;
+    gap: 2px;
+  }
+  .stat-rows .row-between b {
+    font-size: 15px;
+  }
+  .stat-rows .total b {
+    font-size: 19px;
+  }
+  .maturity-note {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  /* 주식: 장터 / 내 주식 나눠 보기 */
+  .grid-stock {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    gap: 10px;
+  }
+  .sub-market .stock-side,
+  .sub-mine .stock-main {
+    display: none;
+  }
+  .stock-main,
+  .stock-side {
+    flex: 1;
+    min-height: 0;
+    gap: 10px;
+  }
+  .market-card {
+    padding: 10px 12px;
+    flex: none;
+  }
+  .market-card .chip-row.scroll {
+    margin: 8px -4px 4px;
+  }
+  .market-card .chip {
+    padding: 5px 10px;
+  }
+  .stock-legend {
+    font-size: 11px;
+  }
+  .stock-legend .gi {
+    width: 14px;
+    height: 14px;
+  }
+  .stock-grid {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 8px 2px 4px;
+    gap: 8px;
+    align-content: start;
+  }
+  .stock-card {
+    padding: 9px 12px;
+  }
+  .st-emoji {
+    width: 40px;
+    height: 40px;
+  }
+  .limit-card {
+    flex: none;
+  }
+  .stock-side > .card:last-child {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  #portfolio-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* 상점: 상점 / 내 가방 나눠 보기 */
+  .shop-head {
+    padding: 8px 12px;
+    flex: none;
+  }
+  .shop-head .shop-panda,
+  .shop-head .card-title {
+    display: none;
+  }
+  .shop-head .desc {
+    font-size: 12.5px;
+  }
+  .profile-shop {
+    padding: 8px 12px;
+    gap: 10px;
+    flex: none;
+  }
+  .profile-now {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+  .profile-shop .card-title {
+    font-size: 14.5px;
+  }
+  .profile-shop .desc {
+    font-size: 12px;
+  }
+  .shop-grid {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    align-content: start;
+    gap: 8px;
+    padding: 2px 2px 4px;
+  }
+  .shop-item {
+    padding: 10px 8px;
+    gap: 2px;
+  }
+  .shop-emoji {
+    width: 56px;
+    height: 56px;
+  }
+  .shop-emoji .gi {
+    width: 38px;
+    height: 38px;
+  }
+  .shop-name {
+    font-size: 14.5px;
+  }
+  .shop-desc {
+    min-height: 0;
+    font-size: 11px;
+  }
+  .shop-price {
+    font-size: 17px;
+    margin: 0 0 4px;
+  }
+  .sub-store .bag-card,
+  .sub-bag .shop-grid,
+  .sub-bag .profile-shop {
+    display: none;
+  }
+  .bag-card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  #bag-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* 선생님 창구: 한 번에 한 칸씩 */
+  .view-admin {
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: 'header' 'seg' 'main';
+  }
+  .admin-seg {
+    grid-area: seg;
+    margin: 8px 12px 0;
+  }
+  .admin-seg button {
+    font-size: 13px;
+  }
+  .admin-main {
+    padding: 10px 12px 16px;
+  }
+  .view-admin [data-sec] {
+    display: none;
+  }
+  .view-admin[data-show='month'] [data-sec='month'],
+  .view-admin[data-show='reward'] [data-sec='reward'],
+  .view-admin[data-show='shop'] [data-sec='shop'],
+  .view-admin[data-show='coupon'] [data-sec='coupon'],
+  .view-admin[data-show='backup'] [data-sec='backup'] {
+    display: block;
+  }
+  .backup-card {
+    margin-top: 0;
+  }
+  .admin-panda {
+    width: 38px;
+    height: 46px;
+  }
+
+  /* 로그인 · 가입 */
+  .view-entry {
+    padding: 10px 12px calc(10px + var(--safe-b));
+  }
+  .entry-card {
+    padding: 16px;
+  }
+  .awning {
+    height: 26px;
+    margin: -16px -16px 10px;
+  }
+  .entry-hero {
+    margin: 4px 0 6px;
+  }
+  .entry-panda {
+    width: 76px;
+    height: 88px;
+  }
+  .entry-hero.small .entry-panda {
+    width: 58px;
+    height: 68px;
+  }
+  .entry-hero .bubble {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  .brand-title {
+    font-size: 32px;
+    margin: 2px 0 10px;
+  }
+  #avatar-selection {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+  }
+  #avatar-selection .avatar-item {
+    padding: 3px;
+    border-radius: 12px;
+  }
+  #avatar-selection .avatar-item span {
+    display: none;
+  }
+  .field-label {
+    margin: 8px 0 5px;
+  }
+  .hint {
+    margin: 4px 0 10px;
+  }
+
+  /* 거래 창 */
+  .chart-box {
+    height: 140px;
+    margin: 10px 0;
+  }
+  .sheet {
+    padding: 16px 14px calc(14px + var(--safe-b));
+  }
+}
+
+/* 키가 작은 휴대폰 (아이폰 SE 등) */
+@media (max-width: 719px) and (max-height: 720px) {
+  .next-title,
+  .scene-talk .chip,
+  .stock-legend,
+  .maturity-note {
+    display: none;
+  }
+  .scene-char {
+    width: 62px;
+    height: 62px;
+  }
+  .scene-clerk .clerk-panda {
+    width: 56px;
+    height: 66px;
+  }
+  .hero-total {
+    font-size: 28px;
+  }
+  .piggy-steps {
+    display: none;
+  }
+  .stat-rows {
+    margin-top: 2px;
+  }
+  .chart-box {
+    height: 110px;
+  }
+  .news-line + .news-line {
+    display: none;
+  }
+}
+@media (max-width: 719px) {
+  .market-card .card-title,
+  .stock-legend {
+    display: none;
+  }
+  .market-card .row-between {
+    justify-content: flex-end;
+  }
+  .market-card .chip-row.scroll {
+    margin-top: 0;
+  }
+  .market-card {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 8px;
+  }
+  .market-card .row-between {
+    flex: none;
+  }
+  .market-card .chip-row.scroll {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+  }
+}

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <script src="inapp.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#ffd9e6" />
     <title>진담은행</title>
     <meta name="description" content="진심을 담은 진담은행 - 공부하면서 모으는 우리 반 은행" />
@@ -478,7 +478,11 @@
           </div>
 
           <!-- 주식 -->
-          <div class="tab-page" id="tab-stock">
+          <div class="tab-page sub-market" id="tab-stock">
+            <div class="seg" role="tablist">
+              <button type="button" class="active" data-sub="market"><svg class="gi" viewBox="0 0 48 48"><use href="#g-globe" /></svg> 기업 장터</button>
+              <button type="button" data-sub="mine"><svg class="gi" viewBox="0 0 48 48"><use href="#g-bag" /></svg> 내 주식</button>
+            </div>
             <div class="grid-stock">
               <div class="stock-side">
                 <div class="card limit-card" id="limit-card"></div>
@@ -508,7 +512,11 @@
           </div>
 
           <!-- 상점 -->
-          <div class="tab-page" id="tab-shop">
+          <div class="tab-page sub-store" id="tab-shop">
+            <div class="seg" role="tablist">
+              <button type="button" class="active" data-sub="store"><svg class="gi" viewBox="0 0 48 48"><use href="#g-bag" /></svg> 상점</button>
+              <button type="button" data-sub="bag"><svg class="gi" viewBox="0 0 48 48"><use href="#g-gift" /></svg> 내 가방</button>
+            </div>
             <div class="card shop-head">
               <svg class="panda shop-panda" viewBox="0 0 120 140"><use href="#panda-clerk-happy" /></svg>
               <div>
@@ -527,8 +535,8 @@
               <span class="chip chip-pink">고르기 ›</span>
             </button>
             <div class="shop-grid" id="shop-list"></div>
-            <div class="card">
-              <div class="card-title"><svg class="ic"><use href="#i-bag" /></svg> 내 가방</div>
+            <div class="card bag-card">
+              <div class="card-title"><svg class="gi" viewBox="0 0 48 48"><use href="#g-gift" /></svg> 내 가방</div>
               <div id="bag-list"></div>
             </div>
           </div>
@@ -536,7 +544,7 @@
       </section>
 
       <!-- ===== 선생님 화면 ===== -->
-      <section id="view-admin" class="view view-admin">
+      <section id="view-admin" class="view view-admin" data-show="month">
         <header class="topbar admin-top">
           <div class="me">
             <svg class="panda admin-panda" viewBox="0 0 120 140"><use href="#panda-clerk" /></svg>
@@ -550,9 +558,16 @@
             <button class="icon-btn" type="button" data-action="logout" aria-label="나가기"><svg class="ic"><use href="#i-exit" /></svg></button>
           </div>
         </header>
+        <div class="seg admin-seg" role="tablist">
+          <button type="button" class="active" data-asec="month">달력</button>
+          <button type="button" data-asec="reward">보상</button>
+          <button type="button" data-asec="shop">상점</button>
+          <button type="button" data-asec="coupon">쿠폰</button>
+          <button type="button" data-asec="backup">백업</button>
+        </div>
         <main class="main admin-main">
           <div class="admin-grid">
-            <div class="card month-card">
+            <div class="card month-card" data-sec="month">
               <div class="card-title"><svg class="gi" viewBox="0 0 48 48"><use href="#g-calendar" /></svg> 게임 달력</div>
               <p class="desc">달력을 넘기면 적금에 <b>1% 이자</b>가 쌓이고, 새 <b>경제 뉴스</b>에 따라 주가가 움직여요. 이번 달에 산 주식은 달력을 넘긴 뒤부터 팔 수 있어요.</p>
               <button class="btn btn-pink" type="button" id="btn-advance"><svg class="gi" viewBox="0 0 48 48"><use href="#g-calendar" /></svg> 한 달 넘기기</button>
@@ -560,7 +575,7 @@
               <div class="eco-row" id="admin-economy"></div>
             </div>
 
-            <div class="card">
+            <div class="card" data-sec="reward">
               <div class="card-title"><svg class="gi" viewBox="0 0 48 48"><use href="#g-coin" /></svg> 보상 지급 / 회수</div>
               <div class="reward-controls">
                 <select id="admin-reward-type" class="select full">
@@ -575,7 +590,7 @@
               <div class="admin-student-list" id="admin-students"></div>
             </div>
 
-            <div class="card">
+            <div class="card" data-sec="shop">
               <div class="row-between">
                 <div class="card-title" style="margin: 0"><svg class="gi" viewBox="0 0 48 48"><use href="#g-bag" /></svg> 상점 관리</div>
                 <button class="chip chip-pink" type="button" id="btn-add-item">+ 새 상품</button>
@@ -587,13 +602,13 @@
               <div class="admin-shop-list" id="admin-shop"></div>
             </div>
 
-            <div class="card">
+            <div class="card" data-sec="coupon">
               <div class="card-title"><svg class="gi" viewBox="0 0 48 48"><use href="#g-ticket" /></svg> 사용 기다리는 쿠폰</div>
               <p class="desc">학생이 산 물건이에요. 실제로 주고 나면 <b>사용 완료</b>를 눌러 주세요.</p>
               <div id="admin-pending"></div>
             </div>
           </div>
-          <div class="card backup-card">
+          <div class="card backup-card" data-sec="backup">
             <div class="card-title"><svg class="gi" viewBox="0 0 48 48"><use href="#g-shield" /></svg> 데이터 지키기 (백업)</div>
             <p class="desc">통장 기록은 <b>이 기기 브라우저</b>에만 저장돼요. 하루 한 번 자동 백업이 되고, 아래 버튼으로 <b>백업 파일</b>을 저장해 두면 기기를 바꿔도 되살릴 수 있어요.</p>
             <div class="backup-btns">
@@ -601,9 +616,19 @@
               <button class="btn btn-gray sm" type="button" id="btn-import">백업 파일 불러오기</button>
               <input type="file" id="import-file" accept=".json,application/json" hidden />
             </div>
+            <details class="move-guide">
+              <summary>다른 기기(휴대폰·패드)로 데이터 옮기는 방법</summary>
+              <ol>
+                <li>지금 기기에서 <b>백업 파일 저장하기</b>를 눌러요.</li>
+                <li>저장된 파일을 카카오톡 <b>나와의 채팅</b>·이메일·구글 드라이브로 옮길 기기에 보내요.</li>
+                <li>옮길 기기에서 파일을 <b>다운로드(저장)</b>해요.</li>
+                <li>옮길 기기의 Chrome에서 진담은행 → 선생님 창구 → <b>백업 파일 불러오기</b> → 그 파일을 골라요.</li>
+              </ol>
+              <p>※ 옮긴 뒤에는 한 기기에서만 사용해 주세요. 두 기기에서 따로 쓰면 기록이 서로 달라져요.</p>
+            </details>
             <div id="auto-backups"></div>
           </div>
-          <div class="danger-zone">
+          <div class="danger-zone" data-sec="backup">
             <button type="button" id="btn-reset">모든 계좌 및 데이터 초기화 (위험)</button>
           </div>
         </main>
