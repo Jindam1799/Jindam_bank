@@ -164,3 +164,72 @@ const COMPANY_EVENTS = [
     type: 'bad',
   },
 ];
+
+
+// 3. 주식 종목 (region: kr / us / cn / etc)
+const GLOBAL_STOCKS = [
+  { symbol: 'AAPL', emoji: '🍎', name: '애플', region: 'us' },
+  { symbol: 'MSFT', emoji: '💻', name: '마이크로소프트', region: 'us' },
+  { symbol: 'GOOGL', emoji: '🔍', name: '구글', region: 'us' },
+  { symbol: 'AMZN', emoji: '📦', name: '아마존', region: 'us' },
+  { symbol: 'TSLA', emoji: '🚗', name: '테슬라', region: 'us' },
+  { symbol: 'NVDA', emoji: '🎮', name: '엔비디아', region: 'us' },
+  { symbol: 'META', emoji: '📱', name: '메타', region: 'us' },
+  { symbol: 'NFLX', emoji: '🍿', name: '넷플릭스', region: 'us' },
+  { symbol: '005930', emoji: '📱', name: '삼성전자', region: 'kr' },
+  { symbol: 'TCEHY', emoji: '🐧', name: '텐센트', region: 'cn' },
+  { symbol: 'BABA', emoji: '🛒', name: '알리바바', region: 'cn' },
+  { symbol: 'BIDU', emoji: '🐾', name: '바이두', region: 'cn' },
+  { symbol: 'JD', emoji: '📦', name: '징둥닷컴', region: 'cn' },
+  { symbol: 'BYDDY', emoji: '🚙', name: 'BYD', region: 'cn' },
+  { symbol: 'XIACY', emoji: '📱', name: '샤오미', region: 'cn' },
+  { symbol: 'NTES', emoji: '🕹️', name: '넷이즈', region: 'cn' },
+  { symbol: 'PDD', emoji: '🍋', name: '핀둬둬', region: 'cn' },
+  { symbol: 'MEIT', emoji: '🛵', name: '메이퇀', region: 'cn' },
+  { symbol: 'NIO', emoji: '⚡', name: '니오', region: 'cn' },
+  { symbol: 'XPEV', emoji: '🦅', name: '샤오펑', region: 'cn' },
+  { symbol: 'LI', emoji: '🚙', name: '리오토', region: 'cn' },
+  { symbol: 'TSM', emoji: '🔬', name: 'TSMC', region: 'etc', country: '대만' },
+  { symbol: 'SONY', emoji: '🎮', name: '소니', region: 'etc', country: '일본' },
+  { symbol: 'TM', emoji: '🚙', name: '토요타', region: 'etc', country: '일본' },
+  { symbol: 'NINT', emoji: '🍄', name: '닌텐도', region: 'etc', country: '일본' },
+  { symbol: 'DIS', emoji: '🏰', name: '디즈니', region: 'us' },
+  { symbol: 'LEGO', emoji: '🧱', name: '레고', region: 'etc', country: '유럽' },
+  { symbol: 'MCD', emoji: '🍔', name: '맥도날드', region: 'us' },
+  { symbol: 'SBUX', emoji: '☕', name: '스타벅스', region: 'us' },
+  { symbol: 'NKE', emoji: '👟', name: '나이키', region: 'us' },
+];
+
+const REGIONS = {
+  kr: { label: '한국', flag: '🇰🇷' },
+  us: { label: '미국', flag: '🇺🇸' },
+  cn: { label: '중국', flag: '🇨🇳' },
+  etc: { label: '일본·대만·유럽', flag: '🌏' },
+};
+
+// 4. 상점 기본 상품 (선생님 패널에서 추가·수정·삭제 가능)
+//    stock: -1 이면 무제한
+const DEFAULT_SHOP = [
+  { id: 'candy', emoji: '🍬', name: '사탕 1개', desc: '달콤한 사탕 하나!', price: 3, stock: -1 },
+  { id: 'sticker', emoji: '⭐', name: '칭찬 스티커', desc: '내 노트에 붙이는 반짝 스티커', price: 5, stock: -1 },
+  { id: 'seat', emoji: '💺', name: '자리 바꾸기 쿠폰', desc: '원하는 자리에 앉을 수 있어요', price: 10, stock: -1 },
+  { id: 'music', emoji: '🎵', name: '음악 선곡권', desc: '쉬는 시간 노래를 내가 골라요', price: 8, stock: -1 },
+  { id: 'hw', emoji: '📚', name: '숙제 1회 면제권', desc: '숙제 한 번 쉬어 가기', price: 20, stock: -1 },
+  { id: 'game', emoji: '🎲', name: '선생님과 게임 한 판', desc: '수업 끝나고 선생님과 대결!', price: 15, stock: -1 },
+  { id: 'leader', emoji: '👑', name: '하루 반장', desc: '오늘 수업의 반장이 되어요', price: 25, stock: 1 },
+];
+
+// 5. 팬더 행원의 경제 꿀팁 (홈 화면 말풍선)
+const PANDA_TIPS = [
+  '어서 오세요! 오늘도 진담은행에 와 줘서 고마워요 🐼',
+  '<b>이자</b>는 내 돈이 은행에서 일해서 벌어 온 돈이에요.',
+  '적금은 <b>끝까지 기다리면</b> 이자를 다 받을 수 있어요. 중간에 깨면 이자가 사라져요!',
+  '주식은 오르기도 하고 <b>내리기도</b> 해요. 그래서 전 재산을 넣으면 위험해요.',
+  '여러 회사에 <b>나눠서</b> 투자하는 걸 <b>분산 투자</b>라고 해요.',
+  '사고 싶은 게 생기면, <b>꼭 필요한지</b> 한 번 더 생각해 봐요.',
+  '<b>뉴스</b>를 잘 읽으면 어떤 회사 주가가 오를지 힌트를 얻을 수 있어요!',
+  '<b>평단가</b>는 내가 주식 1개를 평균 얼마에 샀는지 알려 주는 숫자예요.',
+  '돈을 모으는 비결: <b>조금씩, 꾸준히!</b>',
+  '이번 달에 산 주식은 <b>다음 달</b>부터 팔 수 있어요. 투자는 기다림이 중요해요!',
+  '숙제를 하면 돈이 생겨요. 공부도 하고 돈도 모으고, 일석이조!',
+];

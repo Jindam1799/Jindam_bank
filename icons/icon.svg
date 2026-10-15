@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd3e2"/>
+      <stop offset=".55" stop-color="#ffe6c4"/>
+      <stop offset="1" stop-color="#d6efff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="96" cy="104" r="40" fill="#fff" opacity=".7"/>
+  <circle cx="430" cy="420" r="58" fill="#fff" opacity=".45"/>
+  <!-- 차양 -->
+  <path d="M86 92h340v44H86z" fill="#FF6F9F"/>
+  <path d="M154 92h68v44h-68zM290 92h68v44h-68z" fill="#fff"/>
+  <path d="M86 136a17 17 0 0 0 34 0z" fill="#FF6F9F"/><path d="M120 136a17 17 0 0 0 34 0z" fill="#FF6F9F"/><path d="M154 136a17 17 0 0 0 34 0z" fill="#fff"/><path d="M188 136a17 17 0 0 0 34 0z" fill="#fff"/><path d="M222 136a17 17 0 0 0 34 0z" fill="#FF6F9F"/><path d="M256 136a17 17 0 0 0 34 0z" fill="#FF6F9F"/><path d="M290 136a17 17 0 0 0 34 0z" fill="#fff"/><path d="M324 136a17 17 0 0 0 34 0z" fill="#fff"/><path d="M358 136a17 17 0 0 0 34 0z" fill="#FF6F9F"/><path d="M392 136a17 17 0 0 0 34 0z" fill="#FF6F9F"/>
+  <!-- 팬더 행원 -->
+  <g transform="translate(120 150) scale(2.27)">
+    <path d="M12 140 Q14 103 60 99 Q106 103 108 140 Z" fill="#4b5fa8" stroke="#3A3352" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M44 101 L60 128 L76 101 Q60 97 44 101 Z" fill="#fff" stroke="#3A3352" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M60 108 L47 101 L47 116 Z M60 108 L73 101 L73 116 Z" fill="#FF6F9F" stroke="#3A3352" stroke-width="2.4" stroke-linejoin="round"/>
+    <circle cx="60" cy="108" r="4" fill="#FF6F9F" stroke="#3A3352" stroke-width="2.2"/>
+    <circle cx="27" cy="27" r="16" fill="#3A3352"/><circle cx="93" cy="27" r="16" fill="#3A3352"/>
+    <circle cx="27" cy="27" r="7" fill="#FFB3C7"/><circle cx="93" cy="27" r="7" fill="#FFB3C7"/>
+    <ellipse cx="60" cy="62" rx="48" ry="42" fill="#fff" stroke="#3A3352" stroke-width="3.5"/>
+    <ellipse cx="41" cy="58" rx="11" ry="14" transform="rotate(-22 41 58)" fill="#3A3352"/>
+    <ellipse cx="79" cy="58" rx="11" ry="14" transform="rotate(22 79 58)" fill="#3A3352"/>
+    <path d="M38 58q5-6 10 0M72 58q5-6 10 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="60" cy="70" rx="5.5" ry="3.8" fill="#3A3352"/>
+    <path d="M50 77q10 12 20 0z" fill="#FF7A9C" stroke="#3A3352" stroke-width="2.6" stroke-linejoin="round"/>
+    <circle cx="29" cy="74" r="7" fill="#FFB3C7"/><circle cx="91" cy="74" r="7" fill="#FFB3C7"/>
+  </g>
+  <!-- 금화 -->
+  <g transform="translate(392 384) scale(.85)">
+    <ellipse cx="0" cy="10" rx="50" ry="50" fill="#e5a91a" stroke="#3A3352" stroke-width="8"/>
+    <circle cx="0" cy="0" r="50" fill="#FFC93C" stroke="#3A3352" stroke-width="8"/>
+    <circle cx="0" cy="0" r="32" fill="none" stroke="#e5a91a" stroke-width="6"/>
+    <path d="M0 -20 6 -6 21 -6 9 3 13 18 0 9 -13 18 -9 3 -21 -6 -6 -6z" fill="#fff" opacity=".9"/>
+  </g>
+</svg>

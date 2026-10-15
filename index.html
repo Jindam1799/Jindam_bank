@@ -2,581 +2,482 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>진담은행 V6.2 - 개별 삭제 & 버그 패치</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffd9e6" />
+    <title>진담은행</title>
+    <meta name="description" content="진심을 담은 진담은행 - 공부하면서 모으는 우리 반 은행" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="진담은행" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   </head>
   <body>
-    <body>
-    <!-- 🎬 인트로 화면 (이 부분을 body 바로 아래에 추가하세요) -->
+    <!-- ===== SVG 심볼 (팬더 행원 + 아이콘) ===== -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <!-- 팬더 몸 (은행원 정장 + 리본 넥타이 + 이름표) -->
+        <g id="panda-body">
+          <path d="M12 140 Q14 103 60 99 Q106 103 108 140 Z" fill="#4b5fa8" stroke="#3A3352" stroke-width="3.5" stroke-linejoin="round" />
+          <path d="M44 101 L60 128 L76 101 Q60 97 44 101 Z" fill="#fff" stroke="#3A3352" stroke-width="2.5" stroke-linejoin="round" />
+          <path d="M60 108 L47 101 L47 116 Z M60 108 L73 101 L73 116 Z" fill="#FF6F9F" stroke="#3A3352" stroke-width="2.4" stroke-linejoin="round" />
+          <circle cx="60" cy="108" r="4" fill="#FF6F9F" stroke="#3A3352" stroke-width="2.2" />
+          <rect x="79" y="116" width="19" height="11" rx="3" fill="#FFC93C" stroke="#3A3352" stroke-width="2" />
+          <path d="M83 121.5h11" stroke="#3A3352" stroke-width="1.8" stroke-linecap="round" />
+        </g>
+        <g id="panda-head-base">
+          <circle cx="27" cy="27" r="16" fill="#3A3352" /><circle cx="93" cy="27" r="16" fill="#3A3352" />
+          <circle cx="27" cy="27" r="7" fill="#FFB3C7" /><circle cx="93" cy="27" r="7" fill="#FFB3C7" />
+          <ellipse cx="60" cy="62" rx="48" ry="42" fill="#fff" stroke="#3A3352" stroke-width="3.5" />
+        </g>
+        <symbol id="panda-clerk" viewBox="0 0 120 140">
+          <use href="#panda-body" />
+          <use href="#panda-head-base" />
+          <ellipse cx="41" cy="58" rx="11" ry="14" transform="rotate(-22 41 58)" fill="#3A3352" />
+          <ellipse cx="79" cy="58" rx="11" ry="14" transform="rotate(22 79 58)" fill="#3A3352" />
+          <circle cx="43" cy="56" r="4.5" fill="#fff" /><circle cx="77" cy="56" r="4.5" fill="#fff" />
+          <circle cx="44.2" cy="54.6" r="1.6" fill="#3A3352" /><circle cx="78.2" cy="54.6" r="1.6" fill="#3A3352" />
+          <ellipse cx="60" cy="71" rx="5.5" ry="3.8" fill="#3A3352" />
+          <path d="M53 78q7 7 14 0" fill="none" stroke="#3A3352" stroke-width="3" stroke-linecap="round" />
+          <circle cx="29" cy="74" r="6.5" fill="#FFB3C7" opacity=".85" /><circle cx="91" cy="74" r="6.5" fill="#FFB3C7" opacity=".85" />
+        </symbol>
+        <symbol id="panda-clerk-happy" viewBox="0 0 120 140">
+          <use href="#panda-body" />
+          <use href="#panda-head-base" />
+          <ellipse cx="41" cy="58" rx="11" ry="14" transform="rotate(-22 41 58)" fill="#3A3352" />
+          <ellipse cx="79" cy="58" rx="11" ry="14" transform="rotate(22 79 58)" fill="#3A3352" />
+          <path d="M38 58q5-6 10 0M72 58q5-6 10 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" />
+          <ellipse cx="60" cy="70" rx="5.5" ry="3.8" fill="#3A3352" />
+          <path d="M50 77q10 12 20 0z" fill="#FF7A9C" stroke="#3A3352" stroke-width="2.6" stroke-linejoin="round" />
+          <circle cx="29" cy="74" r="7" fill="#FFB3C7" /><circle cx="91" cy="74" r="7" fill="#FFB3C7" />
+        </symbol>
+        <symbol id="panda-clerk-sad" viewBox="0 0 120 140">
+          <use href="#panda-body" />
+          <use href="#panda-head-base" />
+          <ellipse cx="41" cy="60" rx="11" ry="14" transform="rotate(-22 41 60)" fill="#3A3352" />
+          <ellipse cx="79" cy="60" rx="11" ry="14" transform="rotate(22 79 60)" fill="#3A3352" />
+          <circle cx="43" cy="60" r="4" fill="#fff" /><circle cx="77" cy="60" r="4" fill="#fff" />
+          <path d="M83 66q3 6 0 9q-3-3 0-9z" fill="#7FC8FF" />
+          <ellipse cx="60" cy="73" rx="5.5" ry="3.8" fill="#3A3352" />
+          <path d="M53 84q7-6 14 0" fill="none" stroke="#3A3352" stroke-width="3" stroke-linecap="round" />
+        </symbol>
+
+        <!-- 아이콘 -->
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11.2 12 4.5l8 6.7V19a1.5 1.5 0 0 1-1.5 1.5h-4v-5.5h-5v5.5h-4A1.5 1.5 0 0 1 4 19z" fill="currentColor" /></symbol>
+        <symbol id="i-bank" viewBox="0 0 24 24"><path d="M12 3 3 8v1.5h18V8z" fill="currentColor" /><path d="M5.5 11v6M10 11v6M14 11v6M18.5 11v6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" /><rect x="3" y="18.5" width="18" height="2.5" rx="1.2" fill="currentColor" /></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 17.5 9 12l3.5 3L20 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M15 6.5h5.5V12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+        <symbol id="i-shop" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2A1.5 1.5 0 0 1 16.3 20.5H7.7a1.5 1.5 0 0 1-1.5-1.3z" fill="currentColor" /><path d="M8.5 10V7a3.5 3.5 0 0 1 7 0v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></symbol>
+        <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></symbol>
+        <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /><path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></symbol>
+        <symbol id="i-next" viewBox="0 0 24 24"><path d="M6 5.5v13l9-6.5z" fill="currentColor" /><rect x="16" y="5.5" width="2.6" height="13" rx="1.2" fill="currentColor" /></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" /></symbol>
+        <symbol id="i-exit" viewBox="0 0 24 24"><path d="M14 4.5H6.5A1.5 1.5 0 0 0 5 6v12a1.5 1.5 0 0 0 1.5 1.5H14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" /><path d="M11 12h9M16.5 8.5 20 12l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+        <symbol id="i-news" viewBox="0 0 24 24"><rect x="3.5" y="5" width="13" height="14.5" rx="2" fill="currentColor" /><path d="M16.5 9h3a1 1 0 0 1 1 1v7.5a2 2 0 0 1-4 0" fill="none" stroke="currentColor" stroke-width="2" /><path d="M6.5 9h7M6.5 12.5h7M6.5 16h4.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" /></symbol>
+        <symbol id="i-bag" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12.5" rx="3" fill="currentColor" /><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="2.2" /><path d="M4 13h16" stroke="#fff" stroke-width="1.8" opacity=".7" /></symbol>
+      </defs>
+    </svg>
+
+    <!-- ===== 인트로 ===== -->
     <div id="intro-screen">
-        <div class="intro-content">
-            <h1>🏦 진심을 담은 진담은행에 오신 것을 환영합니다!</h1>
-            <p>당신의 중국어 자산을 불려줄 최고의 은행</p>
-            <span class="blink-text">화면을 터치하거나 아무 키나 눌러주세요</span>
-        </div>
+      <div class="intro-content">
+        <div class="intro-awning" aria-hidden="true"></div>
+        <svg class="panda intro-panda bounce" viewBox="0 0 120 140"><use href="#panda-clerk-happy" /></svg>
+        <div class="intro-bubble">어서 오세요!<br />진담은행입니다 🐼</div>
+        <h1 class="intro-title">진담은행</h1>
+        <p class="intro-sub">진심을 담아, 차곡차곡 모으는 우리 반 은행</p>
+        <span class="intro-tap">화면을 터치해서 입장하기</span>
+      </div>
     </div>
-    <div class="app-container">
-      <div id="view-login" class="view login-screen active">
-        <h1>🪙 진담은행</h1>
-        <div class="login-box">
-          <input
-            type="text"
-            id="login-nick"
-            class="input-cute"
-            placeholder="이름 (닉네임)"
-            onkeydown="
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                login();
-              }
-            "
-          />
-          <button class="btn-cute" onclick="login()">은행 들어가기 🚀</button>
 
-          <div
-            style="
-              margin-top: 20px;
-              padding-top: 20px;
-              border-top: 1px dashed #dfe6e9;
-            "
-          >
-            <p
-              style="
-                font-size: 13px;
-                color: var(--text-muted);
-                margin-bottom: 10px;
-              "
-            >
-              아직 내 통장이 없다면?
-            </p>
-            <button
-              class="btn-cute"
-              style="
-                background: var(--yellow);
-                color: var(--text-dark);
-                box-shadow: 0 4px 0 #e1b154;
-              "
-              onclick="showSignup()"
-            >
-              새 통장 만들기 💳
-            </button>
+    <!-- ===== 소리 조절 ===== -->
+    <button class="sound-fab" id="sound-fab" type="button" aria-label="소리 조절">
+      <svg class="ic"><use href="#i-sound" /></svg>
+    </button>
+    <div class="sound-pop" id="sound-pop" role="dialog" aria-label="배경음악 조절">
+      <div class="sound-pop-head">
+        <span>🎵 배경음악</span>
+        <button class="icon-btn sm" type="button" data-close-sound aria-label="닫기"><svg class="ic"><use href="#i-close" /></svg></button>
+      </div>
+      <div class="sound-row">
+        <button class="icon-btn" id="sound-mute" type="button" aria-label="음소거"><svg class="ic"><use href="#i-sound" /></svg></button>
+        <input type="range" id="sound-vol" min="0" max="100" step="1" value="25" aria-label="음량" />
+        <span class="sound-val" id="sound-val">25%</span>
+      </div>
+      <div class="sound-row">
+        <span class="sound-track" id="sound-track">1번 곡</span>
+        <button class="chip" id="sound-next" type="button"><svg class="ic"><use href="#i-next" /></svg> 다음 곡</button>
+      </div>
+    </div>
+
+    <div class="app" id="app">
+      <!-- ===== 로그인 ===== -->
+      <section id="view-login" class="view view-entry active">
+        <div class="entry-card">
+          <div class="awning" aria-hidden="true"></div>
+          <div class="entry-hero">
+            <svg class="panda entry-panda" viewBox="0 0 120 140"><use href="#panda-clerk" /></svg>
+            <div class="bubble">안녕하세요! 통장 주인의<br /><b>이름</b>을 알려 주세요.</div>
+          </div>
+          <h1 class="brand-title"><span class="coin">₩</span> 진담은행</h1>
+          <div class="entry-form">
+            <input type="text" id="login-nick" class="input" placeholder="내 이름 (닉네임)" autocomplete="off" enterkeyhint="go" />
+            <button class="btn btn-pink" type="button" id="btn-login">은행 들어가기</button>
+            <div class="divider"><span>아직 통장이 없다면?</span></div>
+            <button class="btn btn-yellow" type="button" id="btn-show-signup">새 통장 만들기 💳</button>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div id="view-signup" class="view login-screen">
-        <h2 style="color: var(--danger); margin-bottom: 15px">
-          나만의 통장 만들기
-        </h2>
-        <div class="login-box">
-          <p
-            style="
-              font-size: 12px;
-              font-weight: bold;
-              color: var(--text-muted);
-              text-align: left;
-              margin-bottom: 5px;
-            "
-          >
-            1. 내 프로필 사진 고르기
-          </p>
-          <div class="avatar-grid" id="avatar-selection"></div>
-
-          <p
-            style="
-              font-size: 12px;
-              font-weight: bold;
-              color: var(--text-muted);
-              text-align: left;
-              margin-bottom: 5px;
-              margin-top: 15px;
-            "
-          >
-            2. 내 이름 쓰기
-          </p>
-          <input
-            type="text"
-            id="signup-nick"
-            class="input-cute"
-            placeholder="사용할 이름 (닉네임)"
-            onkeydown="
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                createAccount();
-              }
-            "
-          />
-
-          <p
-            style="
-              font-size: 11px;
-              color: #aaa;
-              margin-top: 5px;
-              margin-bottom: 10px;
-            "
-          >
-            * 통장을 만들고 나면 선생님이 내 원래 돈을 입금해 주실 거예요!
-          </p>
-          <button class="btn-cute" onclick="createAccount()">
-            통장 개설 완료! 🎉
-          </button>
-          <button
-            class="btn-cute"
-            style="
-              background: transparent;
-              color: var(--text-muted);
-              box-shadow: none;
-              margin-top: 5px;
-            "
-            onclick="cancelSignup()"
-          >
-            뒤로 가기
-          </button>
+      <!-- ===== 회원가입 ===== -->
+      <section id="view-signup" class="view view-entry">
+        <div class="entry-card">
+          <div class="awning" aria-hidden="true"></div>
+          <div class="entry-hero small">
+            <svg class="panda entry-panda" viewBox="0 0 120 140"><use href="#panda-clerk-happy" /></svg>
+            <div class="bubble">새 통장을 만들어 드릴게요!<br />사진과 이름을 골라 주세요.</div>
+          </div>
+          <div class="entry-form">
+            <p class="field-label">1. 내 프로필 고르기</p>
+            <div class="avatar-grid" id="avatar-selection"></div>
+            <p class="field-label">2. 내 이름 쓰기</p>
+            <input type="text" id="signup-nick" class="input" placeholder="사용할 이름 (닉네임)" autocomplete="off" maxlength="12" enterkeyhint="done" />
+            <p class="hint">통장을 만들면 선생님이 원래 모은 돈을 넣어 주실 거예요!</p>
+            <button class="btn btn-pink" type="button" id="btn-signup">통장 만들기 완료! 🎉</button>
+            <button class="btn btn-ghost" type="button" id="btn-cancel-signup">뒤로 가기</button>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div id="view-student" class="view">
-        <header>
-          <div style="display: flex; align-items: center; gap: 10px">
-            <div
-              id="user-avatar"
-              style="
-                font-size: 30px;
-                background: #f4f7f6;
-                border-radius: 50%;
-                width: 45px;
-                height: 45px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              "
-            >
-              👶
-            </div>
+      <!-- ===== 학생 화면 ===== -->
+      <section id="view-student" class="view view-shell">
+        <nav class="nav" id="student-nav" aria-label="메뉴">
+          <div class="nav-brand">
+            <svg class="panda nav-panda" viewBox="0 0 120 140"><use href="#panda-clerk" /></svg>
             <div>
-              <div class="profile-info">
-                <span id="user-display-name">학생</span>님의 지갑
-              </div>
-              <div
-                style="
-                  font-size: 11px;
-                  color: var(--text-muted);
-                  margin-top: 2px;
-                "
-              >
-                <span id="user-account-num" style="font-family: monospace"
-                  >진담-0000-0000</span
-                >
-                |
-                <strong style="color: var(--primary)" id="game-month-display"
-                  >1개월 차</strong
-                >
-              </div>
+              <div class="nav-brand-title">진담은행</div>
+              <div class="nav-brand-sub">팬더 행원이 도와줄게요</div>
             </div>
           </div>
-          <button class="logout-btn" onclick="logout()">나가기</button>
+          <button class="nav-btn active" data-tab="home" type="button"><svg class="ic"><use href="#i-home" /></svg><span>내 자산</span></button>
+          <button class="nav-btn" data-tab="bank" type="button"><svg class="ic"><use href="#i-bank" /></svg><span>적금</span></button>
+          <button class="nav-btn" data-tab="stock" type="button"><svg class="ic"><use href="#i-chart" /></svg><span>주식</span></button>
+          <button class="nav-btn" data-tab="shop" type="button"><svg class="ic"><use href="#i-shop" /></svg><span>상점</span></button>
+        </nav>
+
+        <header class="topbar">
+          <div class="me">
+            <div class="me-avatar" id="user-avatar">🐶</div>
+            <div class="me-text">
+              <div class="me-name"><span id="user-display-name">학생</span>님의 통장</div>
+              <div class="me-sub"><span id="user-account-num" class="mono">진담-0000-0000</span></div>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <span class="month-chip" id="game-month-display">1개월 차</span>
+            <button class="icon-btn js-sound" type="button" aria-label="소리 조절"><svg class="ic"><use href="#i-sound" /></svg></button>
+            <button class="icon-btn" type="button" data-action="logout" aria-label="나가기"><svg class="ic"><use href="#i-exit" /></svg></button>
+          </div>
         </header>
 
-        <div class="tabs">
-          <div class="tab active" onclick="switchTab('tab-home')" id="nav-home">
-            💰 자산
-          </div>
-          <div class="tab" onclick="switchTab('tab-bank')" id="nav-bank">
-            🏦 은행
-          </div>
-          <div class="tab" onclick="switchTab('tab-stock')" id="nav-stock">
-            📈 주식장터
-          </div>
-        </div>
+        <button class="news-bar" id="news-bar" type="button" aria-label="이번 달 뉴스 전체 보기"></button>
 
-        <div class="content">
-          <div id="tab-home" style="display: block">
-            <div
-              class="card"
-              style="
-                background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-                border: none;
-              "
-            >
-              <div class="card-title">💵 내가 가진 현금 (지갑)</div>
-              <div class="asset-big" id="my-cash" style="color: #d63031">
-                0 원
+        <main class="main" id="student-main">
+          <!-- 홈 -->
+          <div class="tab-page active" id="tab-home">
+            <div class="grid-home">
+              <div class="card hero-card">
+                <div class="hero-top">
+                  <div>
+                    <div class="label">내 총 자산</div>
+                    <div class="hero-total" id="my-total">0원</div>
+                  </div>
+                  <div class="coin-stack" aria-hidden="true"><span></span><span></span><span></span></div>
+                </div>
+                <div class="asset-bar" id="asset-bar"></div>
+                <div class="asset-legend">
+                  <div class="legend-item"><i class="dot dot-cash"></i><span>지갑 현금</span><b id="my-cash">0원</b></div>
+                  <div class="legend-item"><i class="dot dot-bank"></i><span>적금</span><b id="my-bank">0원</b></div>
+                  <div class="legend-item"><i class="dot dot-stock"></i><span>주식</span><b id="my-stock-val">0원</b></div>
+                </div>
+              </div>
+
+              <div class="card clerk-card">
+                <svg class="panda clerk-panda" id="clerk-panda" viewBox="0 0 120 140"><use href="#panda-clerk" /></svg>
+                <div class="clerk-talk">
+                  <div class="clerk-name">팬더 행원</div>
+                  <div class="bubble left" id="clerk-tip">어서 오세요!</div>
+                  <button class="chip" type="button" id="btn-next-tip">다른 이야기 듣기 💬</button>
+                </div>
+              </div>
+
+              <div class="card quick-card">
+                <div class="card-title">무엇을 할까요?</div>
+                <div class="quick-grid">
+                  <button class="quick-btn q-bank" type="button" data-goto="bank"><span>🐷</span>저금하기</button>
+                  <button class="quick-btn q-stock" type="button" data-goto="stock"><span>📈</span>주식 보기</button>
+                  <button class="quick-btn q-shop" type="button" data-goto="shop"><span>🛍️</span>상점 가기</button>
+                  <button class="quick-btn q-news" type="button" data-action="open-news"><span>📰</span>뉴스 보기</button>
+                </div>
+              </div>
+
+              <div class="card log-card">
+                <div class="card-title">📝 내 돈 사용 기록</div>
+                <div class="log-list" id="my-logs"></div>
               </div>
             </div>
+          </div>
 
-            <div class="flex-row">
-              <div class="card" style="flex: 1">
-                <div
-                  class="card-title"
-                  style="font-size: 14px; color: var(--text-muted)"
-                >
-                  🏦 은행 적금
+          <!-- 적금 -->
+          <div class="tab-page" id="tab-bank">
+            <div class="grid-two">
+              <div class="card">
+                <div class="row-between wallet-line">
+                  <span>👛 내 지갑 현금</span>
+                  <b class="money" id="bank-my-cash">0원</b>
                 </div>
-                <div
-                  style="font-size: 20px; font-weight: bold; text-align: center"
-                  id="my-bank"
-                >
-                  0 원
+                <div class="card-title">🐷 6개월 쑥쑥 적금</div>
+                <p class="desc">
+                  언제든 <b>더 넣을 수</b> 있어요! 선생님이 달력을 넘길 때마다 <b>넣은 돈의 1%</b>가 이자로 쌓이고,
+                  6개월이 되면 이자까지 모두 지갑으로 돌아와요.
+                </p>
+                <div class="amount-input">
+                  <input type="number" inputmode="numeric" id="bank-input-amount" class="input" placeholder="저금할 금액" min="1" />
+                  <span class="unit">원</span>
+                </div>
+                <div class="chip-row" id="bank-quick">
+                  <button class="chip" type="button" data-add="1">+1</button>
+                  <button class="chip" type="button" data-add="5">+5</button>
+                  <button class="chip" type="button" data-add="10">+10</button>
+                  <button class="chip" type="button" data-add="half">절반</button>
+                  <button class="chip" type="button" data-add="all">전부</button>
+                </div>
+                <button class="btn btn-mint" type="button" id="btn-deposit">저금하기 🐷</button>
+              </div>
+              <div class="card" id="deposit-list-container"></div>
+            </div>
+          </div>
+
+          <!-- 주식 -->
+          <div class="tab-page" id="tab-stock">
+            <div class="grid-stock">
+              <div class="stock-side">
+                <div class="card limit-card" id="limit-card"></div>
+                <div class="card">
+                  <div class="card-title">💼 내 주식 바구니</div>
+                  <div id="portfolio-container"></div>
                 </div>
               </div>
-              <div class="card" style="flex: 1">
-                <div
-                  class="card-title"
-                  style="font-size: 14px; color: var(--text-muted)"
-                >
-                  📈 주식 투자금
+              <div class="stock-main">
+                <div class="card market-card">
+                  <div class="row-between">
+                    <div class="card-title" style="margin: 0">🌍 세계 기업 장터</div>
+                    <select id="stock-sort" class="select" aria-label="정렬">
+                      <option value="default">기본 순서</option>
+                      <option value="up">많이 오른 순</option>
+                      <option value="down">많이 내린 순</option>
+                      <option value="cheap">가격 낮은 순</option>
+                      <option value="pricey">가격 높은 순</option>
+                    </select>
+                  </div>
+                  <div class="chip-row scroll" id="stock-filters"></div>
+                  <div class="stock-legend">🔴 빨강 = 오름 · 🔵 파랑 = 내림 (이번 달 시작 가격과 비교) · 🔒 이번 달에 산 주식은 다음 달부터 팔 수 있어요</div>
                 </div>
-                <div
-                  style="font-size: 20px; font-weight: bold; text-align: center"
-                  id="my-stock-val"
-                >
-                  0 원
+                <div class="stock-grid" id="stock-list-container"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 상점 -->
+          <div class="tab-page" id="tab-shop">
+            <div class="card shop-head">
+              <svg class="panda shop-panda" viewBox="0 0 120 140"><use href="#panda-clerk-happy" /></svg>
+              <div>
+                <div class="card-title" style="margin-bottom: 4px">🛍️ 진담 상점</div>
+                <div class="desc" style="margin: 0">
+                  지갑 현금 <b class="money" id="shop-my-cash">0원</b>으로 살 수 있어요. 산 물건은 <b>내 가방</b>에 들어가요!
                 </div>
               </div>
+            </div>
+            <div class="shop-grid" id="shop-list"></div>
+            <div class="card">
+              <div class="card-title"><svg class="ic"><use href="#i-bag" /></svg> 내 가방</div>
+              <div id="bag-list"></div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <!-- ===== 선생님 화면 ===== -->
+      <section id="view-admin" class="view view-admin">
+        <header class="topbar admin-top">
+          <div class="me">
+            <svg class="panda admin-panda" viewBox="0 0 120 140"><use href="#panda-clerk" /></svg>
+            <div class="me-text">
+              <div class="me-name">진담은행 선생님 창구</div>
+              <div class="me-sub">현재 <b id="admin-month-display">1</b>개월 차</div>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <button class="icon-btn js-sound" type="button" aria-label="소리 조절"><svg class="ic"><use href="#i-sound" /></svg></button>
+            <button class="icon-btn" type="button" data-action="logout" aria-label="나가기"><svg class="ic"><use href="#i-exit" /></svg></button>
+          </div>
+        </header>
+        <main class="main admin-main">
+          <div class="admin-grid">
+            <div class="card month-card">
+              <div class="card-title">📅 게임 달력</div>
+              <p class="desc">달력을 넘기면 적금에 <b>1% 이자</b>가 쌓이고, 새 <b>경제 뉴스</b>에 따라 주가가 움직여요. 이번 달에 산 주식은 달력을 넘긴 뒤부터 팔 수 있어요.</p>
+              <button class="btn btn-pink" type="button" id="btn-advance">한 달 넘기기 📅</button>
+              <div class="admin-news" id="admin-news"></div>
+              <div class="eco-row" id="admin-economy"></div>
             </div>
 
             <div class="card">
-              <div class="card-title">📝 내 돈 사용 기록</div>
-              <div
-                id="my-logs"
-                style="
-                  font-size: 12px;
-                  color: var(--text-muted);
-                  max-height: 150px;
-                  overflow-y: auto;
-                  line-height: 1.6;
-                "
-              ></div>
+              <div class="card-title">💰 보상 지급 / 회수</div>
+              <div class="reward-controls">
+                <select id="admin-reward-type" class="select full">
+                  <option value="1">📝 숙제 완료 (+1원)</option>
+                  <option value="2">🔥 게임 승리 (+2원)</option>
+                  <option value="1">⚡ 퀴즈 정답 (+1원)</option>
+                  <option value="custom">✏️ 직접 입력 (원래 돈 입금 / 특별 보상)</option>
+                </select>
+                <input type="number" inputmode="numeric" id="admin-custom-amount" class="input hidden" placeholder="금액(원)을 입력하세요" />
+                <button class="btn btn-blue sm" type="button" id="btn-reward-all">👥 모든 학생에게 지급</button>
+              </div>
+              <div class="admin-student-list" id="admin-students"></div>
             </div>
-          </div>
 
-          <div id="tab-bank" style="display: none">
             <div class="card">
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  margin-bottom: 15px;
-                  border-bottom: 1px solid #eee;
-                  padding-bottom: 10px;
-                "
-              >
-                <span style="font-weight: bold">내 지갑의 현금:</span>
-                <span
-                  style="
-                    font-size: 18px;
-                    font-weight: bold;
-                    color: var(--danger);
-                  "
-                  id="bank-my-cash"
-                  >0 원</span
-                >
+              <div class="row-between">
+                <div class="card-title" style="margin: 0">🛍️ 상점 관리</div>
+                <button class="chip chip-pink" type="button" id="btn-add-item">+ 새 상품</button>
               </div>
-
-              <div class="card-title">🏦 6개월 누적형 정기 적금</div>
-              <p
-                style="
-                  font-size: 12px;
-                  color: var(--text-muted);
-                  margin-bottom: 15px;
-                  line-height: 1.4;
-                "
-              >
-                원할 때마다 언제든 이 통장에 <strong>추가로 저금</strong>할 수
-                있어요!<br />
-                선생님이 달력을 넘길 때마다 <strong>원금의 1% 이자</strong>가
-                자산에 쌓이고, 6개월 만기가 되면 모두 돌려받습니다.
-              </p>
-              <div class="flex-row">
-                <input
-                  type="number"
-                  id="bank-input-amount"
-                  class="input-cute"
-                  style="margin-bottom: 0"
-                  placeholder="저축할 금액"
-                />
-                <button
-                  class="btn-cute"
-                  style="
-                    width: 100px;
-                    background: var(--success);
-                    box-shadow: 0 4px 0 #008f72;
-                  "
-                  onclick="makeDeposit()"
-                >
-                  저금하기
-                </button>
-              </div>
+              <div class="admin-shop-list" id="admin-shop"></div>
             </div>
 
-            <div class="card" style="padding: 15px">
-              <div id="deposit-list-container"></div>
+            <div class="card">
+              <div class="card-title">🎟️ 사용 기다리는 쿠폰</div>
+              <p class="desc">학생이 산 물건이에요. 실제로 주고 나면 <b>사용 완료</b>를 눌러 주세요.</p>
+              <div id="admin-pending"></div>
             </div>
           </div>
+          <div class="danger-zone">
+            <button type="button" id="btn-reset">모든 계좌 및 데이터 초기화 (위험)</button>
+          </div>
+        </main>
+      </section>
+    </div>
 
-          <div id="tab-stock" style="display: none">
-            <div
-              class="card"
-              style="background: #f4f7f6; border-color: #dfe6e9"
-            >
-              <div class="card-title" style="color: var(--blue)">
-                💼 내 주식 포트폴리오
-              </div>
-              <div id="portfolio-container" style="font-size: 13px"></div>
-            </div>
-
-            <div class="card" style="padding: 10px 15px">
-              <div class="card-title" style="margin-bottom: 5px">
-                🌍 세계 유명 기업 장터
-              </div>
-              <p style="font-size: 11px; color: var(--text-muted)">
-                ⚠️ 내 전체 자산의 <strong>50%</strong>까지만 투자할 수 있어요!
-              </p>
-            </div>
-            <div class="card" style="padding: 0; overflow: hidden">
-              <div id="stock-list-container"></div>
-            </div>
+    <!-- ===== 주식 거래 모달 ===== -->
+    <div class="modal" id="stock-modal" aria-modal="true" role="dialog">
+      <div class="sheet stock-sheet">
+        <button class="icon-btn sheet-close" type="button" data-close="stock-modal" aria-label="닫기"><svg class="ic"><use href="#i-close" /></svg></button>
+        <div class="sm-head">
+          <div class="sm-emoji" id="modal-stock-emoji">🍎</div>
+          <div>
+            <div class="sm-name" id="modal-stock-name">회사명</div>
+            <div class="sm-region" id="modal-stock-region">미국</div>
+          </div>
+          <div class="sm-price-col">
+            <div class="sm-price" id="modal-stock-price">0원</div>
+            <div class="sm-change" id="modal-stock-change">-</div>
           </div>
         </div>
-      </div>
-
-      <div id="view-admin" class="view">
-        <header style="background: #0984e3">
-          <div class="profile-info" style="color: white">
-            👩‍🏫 진담 선생님 패널
+        <div class="sm-news hidden" id="modal-stock-news"></div>
+        <div class="chart-box"><canvas id="stock-canvas"></canvas></div>
+        <div class="sm-mine" id="modal-mine"></div>
+        <div class="qty-box">
+          <div class="qty-stepper">
+            <button class="qty-btn" type="button" data-qty="-1" aria-label="하나 빼기">−</button>
+            <input type="number" inputmode="numeric" id="modal-qty-input" min="1" value="1" aria-label="수량" />
+            <button class="qty-btn" type="button" data-qty="1" aria-label="하나 더하기">＋</button>
           </div>
-          <button class="logout-btn" onclick="logout()">나가기</button>
-        </header>
-        <div class="content" style="padding-top: 20px">
-          <div
-            class="card"
-            style="background: #fff0f0; border-color: var(--danger)"
-          >
-            <div class="card-title" style="color: var(--danger)">
-              ⏰ 게임 달력 관리 (현재:
-              <span id="admin-month-display">1</span>개월 차)
-            </div>
-            <p
-              style="
-                font-size: 12px;
-                color: var(--text-muted);
-                margin-bottom: 10px;
-              "
-            >
-              달력을 넘기면 유지된 적금들에 <strong>1% 이자</strong>가 일괄
-              지급됩니다.
-            </p>
-            <button
-              class="btn-cute"
-              style="background: var(--danger); box-shadow: 0 4px 0 #b32526"
-              onclick="advanceGameMonth()"
-            >
-              📅 한 달 달력 넘기기 (이자 발생!)
-            </button>
+          <div class="chip-row center">
+            <button class="chip" type="button" data-qty-set="1">1개</button>
+            <button class="chip" type="button" data-qty-set="5">5개</button>
+            <button class="chip" type="button" data-qty-set="10">10개</button>
+            <button class="chip chip-red" type="button" data-qty-set="maxbuy">살 수 있는 만큼</button>
+            <button class="chip chip-blue" type="button" data-qty-set="maxsell">가진 만큼</button>
           </div>
-
-          <div class="card">
-            <div class="card-title">💰 학생 자산 / 보상 관리</div>
-            <div
-              style="
-                margin-bottom: 15px;
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-              "
-            >
-              <select
-                id="admin-reward-type"
-                class="input-cute"
-                style="padding: 10px; margin: 0"
-                onchange="toggleCustomReward()"
-              >
-                <option value="1">📝 숙제 완료 (+1원)</option>
-                <option value="2">🔥 게임 승리 (+2원)</option>
-                <option value="1">⚡ 퀴즈 정답 (+1원)</option>
-                <option value="custom">
-                  ✏️ 직접 입력 (기존 돈 입력/특별 보상)
-                </option>
-              </select>
-              <input
-                type="number"
-                id="admin-custom-amount"
-                class="input-cute"
-                style="display: none; margin: 0; border-color: var(--blue)"
-                placeholder="금액(원)을 입력하세요"
-              />
-            </div>
-            <div class="admin-student-list" id="admin-students"></div>
-          </div>
-
-          <div style="text-align: center; margin-top: 30px">
-            <button
-              style="
-                background: transparent;
-                border: none;
-                color: #b2bec3;
-                text-decoration: underline;
-                cursor: pointer;
-                font-size: 12px;
-              "
-              onclick="reqResetSystem()"
-            >
-              모든 계좌 및 데이터 초기화 (위험)
-            </button>
-          </div>
+          <div class="qty-preview" id="modal-preview"></div>
+        </div>
+        <div class="trade-row">
+          <button class="btn btn-red" type="button" data-trade="buy">사기</button>
+          <button class="btn btn-blue" type="button" data-trade="sell">팔기</button>
         </div>
       </div>
     </div>
 
-    <div class="modal-overlay" id="stock-modal">
-      <div class="modal-content">
-        <h2 id="modal-stock-name" style="margin-bottom: 5px">회사명</h2>
-        <div
-          style="
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--blue);
-          "
-          id="modal-stock-price"
-        >
-          0 원
+    <!-- ===== 뉴스 모달 ===== -->
+    <div class="modal" id="news-modal" aria-modal="true" role="dialog">
+      <div class="sheet">
+        <button class="icon-btn sheet-close" type="button" data-close="news-modal" aria-label="닫기"><svg class="ic"><use href="#i-close" /></svg></button>
+        <div class="news-head">
+          <svg class="panda news-panda" viewBox="0 0 120 140"><use href="#panda-clerk" /></svg>
+          <div>
+            <div class="sheet-title">📰 진담 경제 뉴스</div>
+            <div class="desc" style="margin: 0">뉴스를 읽고 어떤 주식이 오를지 생각해 봐요!</div>
+          </div>
         </div>
-
-        <div
-          style="
-            background: #f4f7f6;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #dfe6e9;
-          "
-        >
-          <canvas
-            id="stock-canvas"
-            width="300"
-            height="150"
-            style="width: 100%; height: 150px"
-          ></canvas>
-        </div>
-
-        <div
-          style="
-            background: #f1f2f6;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            text-align: left;
-          "
-        >
-          내가 가진 주식:
-          <strong id="modal-my-shares" style="color: var(--primary)">0</strong>
-          개<br />
-          나의 평단가: <span id="modal-my-avg">0</span> 원
-        </div>
-
-        <input
-          type="number"
-          id="modal-qty-input"
-          class="input-cute"
-          placeholder="몇 개(주)를 거래할까요?"
-          min="1"
-        />
-
-        <div class="flex-row">
-          <button
-            class="btn-cute"
-            style="background: var(--danger); box-shadow: 0 4px 0 #b32526"
-            onclick="executeStockTrade('buy')"
-          >
-            🔴 사기 (Buy)
-          </button>
-          <button
-            class="btn-cute"
-            style="background: var(--blue); box-shadow: 0 4px 0 #076bb8"
-            onclick="executeStockTrade('sell')"
-          >
-            🔵 팔기 (Sell)
-          </button>
-        </div>
-        <button
-          style="
-            margin-top: 15px;
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-weight: bold;
-            cursor: pointer;
-          "
-          onclick="closeStockModal()"
-        >
-          닫기 ✖
-        </button>
+        <div class="news-list" id="news-list"></div>
       </div>
     </div>
 
-    <div class="modal-overlay" id="custom-alert" style="z-index: 9999">
-      <div class="modal-content" style="max-width: 320px">
-        <div style="font-size: 40px; margin-bottom: 10px" id="alert-icon">
-          🔔
+    <!-- ===== 상점 상품 편집 모달 (선생님) ===== -->
+    <div class="modal" id="item-modal" aria-modal="true" role="dialog">
+      <div class="sheet">
+        <button class="icon-btn sheet-close" type="button" data-close="item-modal" aria-label="닫기"><svg class="ic"><use href="#i-close" /></svg></button>
+        <div class="sheet-title" id="item-modal-title">새 상품</div>
+        <p class="field-label">아이콘</p>
+        <div class="emoji-pick" id="item-emoji-pick"></div>
+        <input type="text" id="item-emoji" class="input" maxlength="4" placeholder="이모지 직접 입력" />
+        <p class="field-label">상품 이름</p>
+        <input type="text" id="item-name" class="input" maxlength="20" placeholder="예) 자리 바꾸기 쿠폰" />
+        <p class="field-label">설명 (선택)</p>
+        <input type="text" id="item-desc" class="input" maxlength="40" placeholder="예) 원하는 자리에 앉을 수 있어요" />
+        <div class="grid-two tight">
+          <div>
+            <p class="field-label">가격 (원)</p>
+            <input type="number" inputmode="numeric" id="item-price" class="input" min="1" placeholder="10" />
+          </div>
+          <div>
+            <p class="field-label">수량 (비우면 무제한)</p>
+            <input type="number" inputmode="numeric" id="item-stock" class="input" min="0" placeholder="무제한" />
+          </div>
         </div>
-        <h3 id="alert-title" style="margin-bottom: 10px">알림</h3>
-        <p
-          id="alert-msg"
-          style="
-            margin-bottom: 20px;
-            font-size: 15px;
-            color: var(--text-dark);
-            line-height: 1.4;
-          "
-        ></p>
-        <button class="btn-cute" onclick="closeAlert()">확인</button>
+        <button class="btn btn-pink" type="button" id="btn-save-item">저장하기</button>
       </div>
     </div>
 
-    <div class="modal-overlay" id="custom-confirm" style="z-index: 9999">
-      <div class="modal-content" style="max-width: 320px">
-        <div style="font-size: 40px; margin-bottom: 10px">⚠️</div>
-        <h3 id="confirm-title" style="margin-bottom: 10px">확인해주세요</h3>
-        <p
-          id="confirm-msg"
-          style="
-            margin-bottom: 20px;
-            font-size: 15px;
-            color: var(--text-dark);
-            line-height: 1.4;
-          "
-        ></p>
-        <div class="flex-row">
-          <button
-            class="btn-cute"
-            style="background: var(--danger); box-shadow: 0 4px 0 #b32526"
-            id="confirm-yes"
-          >
-            네
-          </button>
-          <button
-            class="btn-cute"
-            style="
-              background: #dfe6e9;
-              color: var(--text-muted);
-              box-shadow: 0 4px 0 #b2bec3;
-            "
-            onclick="closeConfirm()"
-          >
-            아니오
-          </button>
+    <!-- ===== 알림 / 확인 ===== -->
+    <div class="modal top" id="custom-alert" role="alertdialog" aria-modal="true">
+      <div class="sheet dialog">
+        <div class="dialog-icon" id="alert-icon"></div>
+        <div class="sheet-title" id="alert-title">알림</div>
+        <div class="dialog-msg" id="alert-msg"></div>
+        <button class="btn btn-pink" type="button" id="alert-ok">확인</button>
+      </div>
+    </div>
+    <div class="modal top" id="custom-confirm" role="alertdialog" aria-modal="true">
+      <div class="sheet dialog">
+        <div class="dialog-icon" id="confirm-icon"></div>
+        <div class="sheet-title" id="confirm-title">확인해 주세요</div>
+        <div class="dialog-msg" id="confirm-msg"></div>
+        <div class="trade-row">
+          <button class="btn btn-gray" type="button" id="confirm-no">아니요</button>
+          <button class="btn btn-pink" type="button" id="confirm-yes">네</button>
         </div>
       </div>
     </div>
 
-    <!-- 꼭 이 순서대로 작성되어야 합니다! -->
+    <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
+
+    <!-- 꼭 이 순서대로! -->
     <script src="data.js"></script>
     <script src="scripts.js"></script>
   </body>
