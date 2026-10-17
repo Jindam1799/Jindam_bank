@@ -3382,3 +3382,200 @@ body {
     margin: 0;
   }
 }
+
+/* =========================================================
+   이용 안내 · 주식 한도 안내
+   ========================================================= */
+.help-btn {
+  background: var(--yellow-soft);
+  color: #9a6b00;
+  border-color: #ffe39a;
+}
+.guide-link {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink-2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-2);
+}
+.guide-link .ic {
+  width: 18px;
+  height: 18px;
+}
+.guide-sheet {
+  max-width: 460px;
+  text-align: center;
+}
+.guide-tabs {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--bg-2);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 8px;
+}
+.guide-tabs button {
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-family: var(--font-round);
+  font-size: 14px;
+  color: var(--muted);
+}
+.guide-tabs button.active {
+  background: var(--ink);
+  color: #fff;
+}
+.guide-visual {
+  height: 128px;
+  display: grid;
+  place-items: center;
+  margin: 6px 0 4px;
+}
+.guide-art {
+  width: 110px;
+  height: 128px;
+  animation: bounce 2.4s ease-in-out infinite;
+}
+.guide-art.icon {
+  width: 100px;
+  height: 100px;
+}
+.guide-art.me {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--pink-soft);
+  padding: 8px;
+}
+.guide-step {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.guide-title {
+  padding: 0;
+  margin: 2px 0 8px;
+}
+.guide-body {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  min-height: 150px;
+  text-align: left;
+  background: #fffafd;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.guide-body b {
+  color: var(--pink-dark);
+}
+.guide-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 12px 0;
+}
+.guide-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #e2dbec;
+  transition: width 0.2s;
+}
+.guide-dots button.on {
+  width: 26px;
+  background: var(--pink);
+}
+.room-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--lav-soft);
+  border-radius: 14px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.room-line b {
+  font-family: var(--font-round);
+  font-weight: 400;
+  font-size: 18px;
+  color: #6b5cf0;
+  margin-left: auto;
+}
+.room-line .gi {
+  width: 22px;
+  height: 22px;
+}
+.room-help {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #6b5cf0;
+  background: #fff;
+  border-radius: 999px;
+  padding: 3px 9px;
+  border: 1.5px solid #d9d2ff;
+  white-space: nowrap;
+}
+.btn.soft {
+  filter: saturate(0.35) opacity(0.75);
+}
+.tip-box {
+  margin-top: 10px;
+  background: var(--yellow-soft);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 13px;
+  text-align: left;
+  color: var(--ink-2);
+}
+@media (max-width: 719px) {
+  .guide-visual {
+    height: 96px;
+  }
+  .guide-art {
+    width: 82px;
+    height: 96px;
+  }
+  .guide-art.icon,
+  .guide-art.me {
+    width: 84px;
+    height: 84px;
+  }
+  .guide-body {
+    font-size: 14px;
+    min-height: 0;
+    line-height: 1.65;
+  }
+  .room-line {
+    padding: 6px 8px;
+    margin-bottom: 8px;
+  }
+  .topbar-right {
+    gap: 4px;
+  }
+}
+@media (max-width: 380px) {
+  .me-sub {
+    display: none;
+  }
+  .topbar .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+  .topbar .icon-btn .ic {
+    width: 19px;
+    height: 19px;
+  }
+  .me-avatar {
+    width: 38px;
+    height: 38px;
+  }
+}

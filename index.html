@@ -273,6 +273,7 @@
         <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></symbol>
         <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /><path d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></symbol>
         <symbol id="i-next" viewBox="0 0 24 24"><path d="M6 5.5v13l9-6.5z" fill="currentColor" /><rect x="16" y="5.5" width="2.6" height="13" rx="1.2" fill="currentColor" /></symbol>
+        <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2.4" /><path d="M9.3 9.4a2.8 2.8 0 1 1 3.9 2.6c-.8.4-1.2 1-1.2 1.8v.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" /><circle cx="12" cy="17.3" r="1.4" fill="currentColor" /></symbol>
         <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" /></symbol>
         <symbol id="i-exit" viewBox="0 0 24 24"><path d="M14 4.5H6.5A1.5 1.5 0 0 0 5 6v12a1.5 1.5 0 0 0 1.5 1.5H14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" /><path d="M11 12h9M16.5 8.5 20 12l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" /></symbol>
         <symbol id="i-news" viewBox="0 0 24 24"><rect x="3.5" y="5" width="13" height="14.5" rx="2" fill="currentColor" /><path d="M16.5 9h3a1 1 0 0 1 1 1v7.5a2 2 0 0 1-4 0" fill="none" stroke="currentColor" stroke-width="2" /><path d="M6.5 9h7M6.5 12.5h7M6.5 16h4.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" /></symbol>
@@ -327,6 +328,7 @@
             <button class="btn btn-pink" type="button" id="btn-login">은행 들어가기</button>
             <div class="divider"><span>아직 통장이 없다면?</span></div>
             <button class="btn btn-yellow" type="button" id="btn-show-signup"><svg class="gi" viewBox="0 0 48 48"><use href="#g-card" /></svg> 새 통장 만들기</button>
+            <button class="guide-link" type="button" data-action="open-guide"><svg class="ic"><use href="#i-help" /></svg> 진담은행 이용 방법 보기</button>
           </div>
         </div>
       </section>
@@ -382,6 +384,7 @@
           </div>
           <div class="topbar-right">
             <span class="month-chip" id="game-month-display">1개월 차</span>
+            <button class="icon-btn help-btn" type="button" data-action="open-guide" aria-label="이용 안내"><svg class="ic"><use href="#i-help" /></svg></button>
             <button class="icon-btn js-sound" type="button" aria-label="소리 조절"><svg class="ic"><use href="#i-sound" /></svg></button>
             <button class="icon-btn" type="button" data-action="logout" aria-label="나가기"><svg class="ic"><use href="#i-exit" /></svg></button>
           </div>
@@ -554,6 +557,7 @@
             </div>
           </div>
           <div class="topbar-right">
+            <button class="icon-btn help-btn" type="button" data-action="open-guide" aria-label="이용 안내"><svg class="ic"><use href="#i-help" /></svg></button>
             <button class="icon-btn js-sound" type="button" aria-label="소리 조절"><svg class="ic"><use href="#i-sound" /></svg></button>
             <button class="icon-btn" type="button" data-action="logout" aria-label="나가기"><svg class="ic"><use href="#i-exit" /></svg></button>
           </div>
@@ -571,6 +575,15 @@
               <div class="card-title"><svg class="gi" viewBox="0 0 48 48"><use href="#g-calendar" /></svg> 게임 달력</div>
               <p class="desc">달력을 넘기면 적금에 <b>1% 이자</b>가 쌓이고, 새 <b>경제 뉴스</b>에 따라 주가가 움직여요. 이번 달에 산 주식은 달력을 넘긴 뒤부터 팔 수 있어요.</p>
               <button class="btn btn-pink" type="button" id="btn-advance"><svg class="gi" viewBox="0 0 48 48"><use href="#g-calendar" /></svg> 한 달 넘기기</button>
+              <div class="setting-row">
+                <span class="row-ic"><svg class="gi" viewBox="0 0 48 48"><use href="#g-shield" /></svg> 주식 한도 <small>(전체 자산 중)</small></span>
+                <select id="admin-stock-limit" class="select">
+                  <option value="0.3">30%</option>
+                  <option value="0.5">50%</option>
+                  <option value="0.7">70%</option>
+                  <option value="1">100% (제한 없음)</option>
+                </select>
+              </div>
               <div class="admin-news" id="admin-news"></div>
               <div class="eco-row" id="admin-economy"></div>
             </div>
@@ -653,6 +666,7 @@
         <div class="sm-news hidden" id="modal-stock-news"></div>
         <div class="chart-box"><canvas id="stock-canvas"></canvas></div>
         <div class="sm-mine" id="modal-mine"></div>
+        <div class="room-line" id="modal-room"></div>
         <div class="qty-box">
           <div class="qty-stepper">
             <button class="qty-btn" type="button" data-qty="-1" aria-label="하나 빼기">−</button>
@@ -723,6 +737,23 @@
         <div class="desc" id="avatar-modal-price"></div>
         <div class="avatar-grid big" id="avatar-change-grid"></div>
         <button class="btn btn-pink" type="button" id="btn-avatar-confirm" style="margin-top: 16px">이 캐릭터로 바꾸기</button>
+      </div>
+    </div>
+
+    <!-- ===== 이용 안내 ===== -->
+    <div class="modal" id="guide-modal" aria-modal="true" role="dialog">
+      <div class="sheet guide-sheet">
+        <button class="icon-btn sheet-close" type="button" data-close="guide-modal" aria-label="닫기"><svg class="ic"><use href="#i-close" /></svg></button>
+        <div class="guide-tabs" id="guide-tabs">
+          <button type="button" data-guide-set="student">학생용</button>
+          <button type="button" data-guide-set="teacher">선생님용</button>
+        </div>
+        <div class="guide-page" id="guide-page"></div>
+        <div class="guide-dots" id="guide-dots"></div>
+        <div class="trade-row">
+          <button class="btn btn-gray" type="button" id="guide-prev">이전</button>
+          <button class="btn btn-pink" type="button" id="guide-next">다음</button>
+        </div>
       </div>
     </div>
 

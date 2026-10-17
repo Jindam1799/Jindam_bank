@@ -160,7 +160,8 @@ const state = {
   tipIdx: 0,
   editingItem: null,
   pickAvatar: null,
-  settings: { avatarPrice: DEFAULT_AVATAR_PRICE },
+  settings: { avatarPrice: DEFAULT_AVATAR_PRICE, stockLimit: DEFAULT_STOCK_LIMIT },
+  guide: { set: 'student', idx: 0 },
 };
 
 function freshPrice() {
@@ -292,7 +293,8 @@ function getTotalStockVal(s) {
   return v;
 }
 const getTotalAsset = (s) => s.cash + getTotalBank(s) + getTotalStockVal(s);
-const investLimit = (s) => getTotalAsset(s) * 0.5;
+const limitPct = () => Math.round((state.settings.stockLimit || DEFAULT_STOCK_LIMIT) * 100);
+const investLimit = (s) => getTotalAsset(s) * (state.settings.stockLimit || DEFAULT_STOCK_LIMIT);
 const investRoom = (s) => Math.max(0, investLimit(s) - getTotalStockVal(s));
 // 이번 달에 산 주식은 다음 달(선생님이 달력을 넘긴 뒤)부터 팔 수 있어요
 const lockedQty = (d) => (d && d.lockMonth === state.gameMonth ? d.lockQty || 0 : 0);
@@ -386,6 +388,10 @@ function login() {
     $('#login-nick').value = '';
     showView('view-admin');
     renderAdmin();
+    if (!guideSeen('teacher')) {
+      markGuideSeen('teacher');
+      setTimeout(() => openGuide('teacher'), 400);
+    }
     return;
   }
   const s = state.students[nick];
@@ -397,7 +403,10 @@ function login() {
   renderStudentAll();
   // 안 본 뉴스가 있으면 한 번 보여주기
   const latest = state.news[state.news.length - 1];
-  if (latest && s.seenNews < latest.month) setTimeout(openNews, 400);
+  if (!guideSeen('s:' + nick)) {
+    markGuideSeen('s:' + nick);
+    setTimeout(() => openGuide('student'), 400);
+  } else if (latest && s.seenNews < latest.month) setTimeout(openNews, 400);
 }
 
 function logout() {
@@ -687,7 +696,7 @@ function renderStocks() {
     room = investRoom(s);
   $('#limit-card').innerHTML = `
     <div class="card-title" style="margin-bottom:4px">${gi('shield')} 안전 투자 규칙</div>
-    <div class="desc" style="margin-bottom:6px">주식에는 내 전체 자산의 <b>절반(50%)</b>까지만 넣을 수 있어요.</div>
+    <div class="desc" style="margin-bottom:6px">주식에는 내 전체 자산의 <b>${limitPct()}%</b>까지만 넣을 수 있어요.</div>
     <div class="row-between"><span class="label">더 투자할 수 있는 돈</span><span class="limit-big">${won(Math.min(room, s.cash))}</span></div>
     <div class="meter"><i style="width:${lim > 0 ? clamp((used / lim) * 100, 0, 100) : 0}%"></i></div>
     <div class="limit-nums"><span>투자 중 ${won(used)}</span><span>한도 ${won(lim)}</span></div>`;
@@ -819,14 +828,22 @@ function updateStockModal() {
   const qty = parseInt($('#modal-qty-input').value, 10) || 0;
   const mb = maxBuy(s, p.price);
   const total = qty * p.price;
-  let warn = '';
-  if (qty > mb && qty > sellableQty(d)) warn = `<br><span class="warn">지금은 최대 ${mb}주까지 살 수 있어요</span>`;
   const canSell = sellableQty(d);
+  const room = Math.min(s.cash, investRoom(s));
+  let warn = '';
+  if (mb === 0) {
+    warn =
+      s.cash < p.price
+        ? `<br><span class="warn">지갑 현금이 ${won(p.price)}보다 적어서 지금은 못 사요</span>`
+        : `<br><span class="warn">주식 한도(${limitPct()}%)를 거의 다 썼어요</span>`;
+  } else if (qty > mb && qty > canSell) warn = `<br><span class="warn">지금은 최대 ${mb}주까지 살 수 있어요</span>`;
+  $('#modal-room').innerHTML = `${gi('shield')}<span>주식에 더 넣을 수 있는 돈</span><b>${won(room)}</b><button type="button" class="room-help" data-action="open-guide" data-guide-at="student:3">규칙 보기</button>`;
   const locked = lockedQty(d);
   const lockNote = locked > 0 ? `<br><span style="font-size:12.5px;color:#6b5cf0">${gi('lock')} 이번 달에 산 ${locked}주는 다음 달부터 팔 수 있어요</span>` : '';
   $('#modal-preview').innerHTML = `${qty}주 × ${p.price}원 = <b>${fmt(total)}원</b><br><span style="font-size:12.5px;color:var(--muted)">살 수 있는 최대 ${mb}주 · 지금 팔 수 있는 ${canSell}주</span>${warn}${lockNote}`;
-  $('[data-trade="buy"]').disabled = !(qty > 0 && qty <= mb);
-  $('[data-trade="sell"]').disabled = !(qty > 0 && qty <= canSell);
+  // 버튼은 끄지 않고, 못 할 때는 누르면 이유를 알려 줌
+  $('[data-trade="buy"]').classList.toggle('soft', !(qty > 0 && qty <= mb));
+  $('[data-trade="sell"]').classList.toggle('soft', !(qty > 0 && qty <= canSell));
   drawStockChart(sym, d.qty > 0 ? d.avgPrice : null);
 }
 function setQty(v) {
@@ -935,12 +952,18 @@ function executeStockTrade(type) {
   const d = s.stocks[sym];
   if (type === 'buy') {
     if (s.cash < cost) return customAlert(`지갑에 돈이 부족해요!<br>필요한 돈: <b>${won(cost)}</b><br>내 지갑: ${won(s.cash)}`, '잔액 부족', 'sad');
-    if (getTotalStockVal(s) + cost > investLimit(s))
+    if (getTotalStockVal(s) + cost > investLimit(s)) {
+      const room = investRoom(s);
+      const can = Math.floor(room / price);
       return customAlert(
-        `<b>[안전 투자 규칙]</b><br>주식에는 전체 자산의 50%까지만 넣을 수 있어요.<br>지금 더 넣을 수 있는 돈: <b>${won(investRoom(s))}</b>`,
-        '한도 초과',
+        `주식에는 내 전체 자산의 <b>${limitPct()}%</b>까지만 넣을 수 있어요.<br>` +
+          `지금 더 넣을 수 있는 돈: <b>${won(room)}</b>` +
+          (can > 0 ? `<br>→ 이 주식은 <b>${can}주</b>까지 살 수 있어요.` : '') +
+          `<div class="tip-box">더 사고 싶다면?<br>· 다른 주식을 팔아서 자리를 만들거나<br>· 숙제·퀴즈로 돈을 더 모으면 한도도 늘어나요!</div>`,
+        '주식 한도가 찼어요',
         'sad',
       );
+    }
     s.cash -= cost;
     const nq = d.qty + qty;
     d.avgPrice = (d.qty * d.avgPrice + qty * price) / nq;
@@ -951,7 +974,8 @@ function executeStockTrade(type) {
     addLog(s, `${stockLabel(info)} ${qty}주 샀어요 (-${cost}원)`);
     toast(`${info.name} ${qty}주를 샀어요!`, 'happy');
   } else {
-    if (d.qty < qty) return customAlert('가진 주식보다 많이 팔 수 없어요!', '주식 부족', 'sad');
+    if (d.qty === 0) return customAlert('이 회사 주식을 아직 안 가지고 있어요.', '팔 주식이 없어요', 'sad');
+    if (d.qty < qty) return customAlert(`가진 주식(${d.qty}주)보다 많이 팔 수 없어요!`, '주식 부족', 'sad');
     if (sellableQty(d) < qty)
       return customAlert(
         `이번 달에 산 <b>${lockedQty(d)}주</b>는 <b>다음 달</b>부터 팔 수 있어요.<br>지금 팔 수 있는 주식: <b>${sellableQty(d)}주</b><br><span style="font-size:13px">주식은 금방 사고팔기보다, 뉴스를 보고 기다리는 거예요!</span>`,
@@ -1092,6 +1116,63 @@ function useItem(id) {
   );
 }
 
+// ---------- 이용 안내 ----------
+const GUIDE_KEY = 'jindam_bank_guide_seen';
+function guideSeen(id) {
+  try {
+    return (JSON.parse(localStorage.getItem(GUIDE_KEY) || '[]') || []).includes(id);
+  } catch (e) {
+    return false;
+  }
+}
+function markGuideSeen(id) {
+  try {
+    const a = JSON.parse(localStorage.getItem(GUIDE_KEY) || '[]') || [];
+    if (!a.includes(id)) a.push(id);
+    localStorage.setItem(GUIDE_KEY, JSON.stringify(a));
+  } catch (e) {}
+}
+function openGuide(set, idx = 0) {
+  if (!set) set = $('#view-admin').classList.contains('active') ? 'teacher' : 'student';
+  state.guide = { set, idx };
+  // 선생님용 안내는 선생님 창구 안에서만 보임 (학생·로그인 화면에서는 숨김)
+  const inAdmin = $('#view-admin').classList.contains('active');
+  if (!inAdmin) set = 'student';
+  state.guide = { set, idx };
+  $('#guide-tabs').classList.toggle('hidden', !inAdmin);
+  renderGuide();
+  openModal('guide-modal');
+}
+function guideArt(art) {
+  if (art === 'panda') return pandaSvg('', 'guide-art');
+  if (art === 'panda-happy') return pandaSvg('happy', 'guide-art');
+  if (art === 'me') return `<div class="guide-art me">${avatarHtml(me() ? me().avatar : 'rabbit')}</div>`;
+  return gi(art, 'guide-art icon');
+}
+function renderGuide() {
+  const { set, idx } = state.guide;
+  const pages = GUIDES[set];
+  const pg = pages[idx];
+  $$('#guide-tabs [data-guide-set]').forEach((b) => b.classList.toggle('active', b.dataset.guideSet === set));
+  $('#guide-page').innerHTML = `
+    <div class="guide-visual">${guideArt(pg.art)}</div>
+    <div class="guide-step">${idx + 1} / ${pages.length}</div>
+    <div class="sheet-title guide-title">${pg.title}</div>
+    <div class="guide-body">${pg.body.replace(/\{limit\}/g, limitPct())}</div>`;
+  $('#guide-dots').innerHTML = pages
+    .map((_, i) => `<button type="button" class="${i === idx ? 'on' : ''}" data-guide-go="${i}" aria-label="${i + 1}번째"></button>`)
+    .join('');
+  $('#guide-prev').style.visibility = idx === 0 ? 'hidden' : 'visible';
+  $('#guide-next').textContent = idx === pages.length - 1 ? '알겠어요!' : '다음';
+}
+function guideStep(d) {
+  const pages = GUIDES[state.guide.set];
+  const n = state.guide.idx + d;
+  if (n >= pages.length) return closeModal('guide-modal');
+  state.guide.idx = clamp(n, 0, pages.length - 1);
+  renderGuide();
+}
+
 // ---------- 프로필 캐릭터 바꾸기 (첫 1회 무료) ----------
 const avatarCost = (s) => (s.avatarChanges > 0 ? state.settings.avatarPrice : 0);
 function renderProfileShop() {
@@ -1184,6 +1265,7 @@ function renderAdmin() {
 
   // 상점 관리
   $('#admin-avatar-price').value = state.settings.avatarPrice;
+  $('#admin-stock-limit').value = String(state.settings.stockLimit || DEFAULT_STOCK_LIMIT);
   $('#admin-shop').innerHTML = state.shop.length
     ? state.shop
         .map(
@@ -1607,6 +1689,19 @@ function bindEvents() {
     let el;
     if ((el = t.closest('[data-action="logout"]'))) return logout();
     if ((el = t.closest('[data-action="open-news"]'))) return openNews();
+    if ((el = t.closest('[data-action="open-guide"]'))) {
+      const at = el.dataset.guideAt;
+      if (at) return openGuide(at.split(':')[0], Number(at.split(':')[1]));
+      return openGuide();
+    }
+    if ((el = t.closest('[data-guide-set]'))) {
+      state.guide = { set: el.dataset.guideSet, idx: 0 };
+      return renderGuide();
+    }
+    if ((el = t.closest('[data-guide-go]'))) {
+      state.guide.idx = Number(el.dataset.guideGo);
+      return renderGuide();
+    }
     if ((el = t.closest('[data-action="break-savings"]'))) return breakSavings();
     if ((el = t.closest('[data-goto]'))) return switchTab(el.dataset.goto);
     if ((el = t.closest('[data-action="change-avatar"]'))) return openAvatarModal();
@@ -1653,7 +1748,7 @@ function bindEvents() {
   });
 
   // 모달 바깥 누르면 닫기 (알림/확인 제외)
-  ['stock-modal', 'news-modal', 'item-modal', 'avatar-modal'].forEach((id) =>
+  ['stock-modal', 'news-modal', 'item-modal', 'avatar-modal', 'guide-modal'].forEach((id) =>
     $('#' + id).addEventListener('click', (e) => {
       if (e.target.id === id) closeModal(id);
     }),
@@ -1668,7 +1763,7 @@ function bindEvents() {
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    for (const id of ['custom-confirm', 'custom-alert', 'avatar-modal', 'item-modal', 'news-modal', 'stock-modal'])
+    for (const id of ['custom-confirm', 'custom-alert', 'guide-modal', 'avatar-modal', 'item-modal', 'news-modal', 'stock-modal'])
       if ($('#' + id).classList.contains('open')) return closeModal(id);
     $('#sound-pop').classList.remove('open');
   });
@@ -1719,6 +1814,14 @@ function bindEvents() {
     toast(`프로필 바꾸기 가격: ${state.settings.avatarPrice}원`);
   });
   $('#btn-avatar-confirm').addEventListener('click', confirmAvatarChange);
+  $('#guide-prev').addEventListener('click', () => guideStep(-1));
+  $('#guide-next').addEventListener('click', () => guideStep(1));
+  $('#admin-stock-limit').addEventListener('change', (e) => {
+    const v = parseFloat(e.target.value);
+    state.settings.stockLimit = [0.3, 0.5, 0.7, 1].includes(v) ? v : DEFAULT_STOCK_LIMIT;
+    save();
+    toast(`주식 한도: 전체 자산의 ${limitPct()}%`);
+  });
 
   // 다른 탭에서 데이터가 바뀌면 반영
   window.addEventListener('storage', (e) => {
